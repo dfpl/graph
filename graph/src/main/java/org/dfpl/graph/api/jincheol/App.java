@@ -21,7 +21,10 @@ public class App {
 		
 		//con.deleteCollection("vertex");
 		
-		con.updateVertex();
+		//con.updateVertex();
+		
+		System.out.println(con.getVertexSize());
+		System.out.println(con.getEdgeSize());
 		
 	}
 

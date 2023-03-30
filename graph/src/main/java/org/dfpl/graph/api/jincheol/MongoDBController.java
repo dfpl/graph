@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashSet;
 
 
@@ -172,7 +173,10 @@ public class MongoDBController {
 		
 	}
 	
-	
+	/**
+	 * vertex의 in edge, out edge list 업데이트
+	 * @throws ParseException
+	 */
 	public void updateVertex() throws ParseException {
 		MongoCollection<Document> edgeCol=getCollection("edge");
 		MongoCollection<Document> vertexCol=getCollection("vertex");
@@ -197,28 +201,82 @@ public class MongoDBController {
 			HashSet<String> outESet;
 			HashSet<String> inESet;
 			
-			Document doc=vertexCol.find(filter1).first();
+			Document doc1=vertexCol.find(filter1).first();
+			
+			
+			ArrayList<String> outEList=(ArrayList<String>) doc1.get("outE");
 			
 			outESet=new HashSet<>();//기존 값 어캐 가져 올 것인가 
+			for(String element:outEList) {
+				outESet.add(element);
+			}
+			
+			
 			
 			outESet.add(edgeID);
 			
 			
 			vertexCol.updateOne(filter1, new Document("$set", new Document("outE", outESet)));
 			
+		
+			
+			
 			
 			//////////////////
 			
-			doc=vertexCol.find(filter2).first();
+			
+			Document doc2=vertexCol.find(filter2).first();
+			
+			ArrayList<String> inEList=(ArrayList<String>) doc2.get("inE");
+			
+			outESet=new HashSet<>();//기존 값 어캐 가져 올 것인가 
+			for(String element:inEList) {
+				outESet.add(element);
+			}
 			inESet=new HashSet<>();
 			inESet.add(edgeID);
 			
 			vertexCol.updateOne(filter2, new Document("$set", new Document("inE", inESet)));
+			
+			
 		
 		}
 		
 		
 	}
+	
+	
+	
+	
+	public int getVertexSize() {
+		MongoCollection<Document> vertexCol=getCollection("vertex");
+		
+		
+		return (int)vertexCol.count();
+	}
+	
+	public int getEdgeSize() {
+		MongoCollection<Document> edgeCol=getCollection("edge");
+		
+		
+		return (int)edgeCol.count();
+	}
+	
+
+	
+	
+	public void removeVertex(String id) {
+		MongoCollection<Document> vertexCol=getCollection("vertex");
+		vertexCol.deleteOne(Filters.eq("_id", id));
+	}
+	
+	public void removeEdge(String id) {
+		MongoCollection<Document> edgeCol=getCollection("edge");
+		
+		edgeCol.deleteOne(Filters.eq("_id", id));
+	}
+	
+	
 	
 	
 }

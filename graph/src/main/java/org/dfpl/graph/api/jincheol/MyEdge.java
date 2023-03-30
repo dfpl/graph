@@ -7,7 +7,17 @@ import com.tinkerpop.blueprints.revised.Edge;
 import com.tinkerpop.blueprints.revised.Vertex;
 
 public class MyEdge implements Edge{
-
+	
+	private MongoDBController con;
+	
+	public MyEdge() {
+		con=new MongoDBController("emaildata");
+		con.setMongoDBClient();
+	}
+	
+	
+	
+	
 	@Override
 	public String getId() {
 		// TODO Auto-generated method stub
@@ -41,6 +51,20 @@ public class MyEdge implements Edge{
 	@Override
 	public Vertex getVertex(Direction direction) throws IllegalArgumentException {
 		// TODO Auto-generated method stub
+		
+		Vertex v;
+		
+		if(direction==Direction.IN) {
+			
+		}
+		else if(direction==Direction.OUT) {
+			
+		}
+		else {
+			
+		}
+		
+		
 		return null;
 	}
 
