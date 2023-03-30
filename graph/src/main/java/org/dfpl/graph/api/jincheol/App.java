@@ -1,30 +1,26 @@
 package org.dfpl.graph.api.jincheol;
 
+
 import java.io.IOException;
+
 
 import org.json.simple.parser.ParseException;
 
+
 public class App {
 
-	public static void main(String[] args) throws IOException, ParseException {
+	public static void main(String[] args) throws IOException{
 		// TODO Auto-generated method stub
 		
-		MongoDBController con=new MongoDBController("emaildata");
+//		MongoDBController con=new MongoDBController("emaildata");
+//		con.setMongoDBClient();
+//		con.deleteCollection("vertex");
 		
-		con.setMongoDBClient();
 		
-		//con.insertEdge("D:\\mydata\\email-EuAll.txt");
+		MyGraph g=new MyGraph("emaildata");
 		
-		//con.deleteCollection("edge");
+		g.insertData("C:\\mydata\\email.txt");
 		
-		//con.insertVertex("D:\\mydata\\email-EuAll.txt");
-		
-		//con.deleteCollection("vertex");
-		
-		//con.updateVertex();
-		
-		System.out.println(con.getVertexSize());
-		System.out.println(con.getEdgeSize());
 		
 	}
 

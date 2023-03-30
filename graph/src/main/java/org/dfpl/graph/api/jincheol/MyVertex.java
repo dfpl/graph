@@ -20,7 +20,7 @@ public class MyVertex implements Vertex{
 	
 	
 	public MyVertex(Document doc) {
-		id=(String) doc.get("_id");
+		id=doc.getString("_id");
 		inEdge=new ArrayList<>();
 		outEdge=new ArrayList<>();
 	}
@@ -111,6 +111,14 @@ public class MyVertex implements Vertex{
 	public void remove() {
 		// TODO Auto-generated method stub
 		
+	}
+	
+	public void removeEinE(String edgeLabel) {
+		inEdge.remove(edgeLabel);
+	}
+	
+	public void removeEoutE(String edgeLabel) {
+		outEdge.remove(edgeLabel);
 	}
 
 }

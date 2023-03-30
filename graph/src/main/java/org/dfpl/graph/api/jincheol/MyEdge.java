@@ -2,17 +2,25 @@ package org.dfpl.graph.api.jincheol;
 
 import java.util.Set;
 
+import org.bson.Document;
+
 import com.tinkerpop.blueprints.revised.Direction;
 import com.tinkerpop.blueprints.revised.Edge;
 import com.tinkerpop.blueprints.revised.Vertex;
 
 public class MyEdge implements Edge{
 	
-	private MongoDBController con;
 	
-	public MyEdge() {
-		con=new MongoDBController("emaildata");
-		con.setMongoDBClient();
+	
+	private String label;
+	private Vertex outV;
+	private Vertex inV;
+	
+	public MyEdge(Document doc) {
+		
+		label=doc.getString("label");
+		outV=doc.get("outV",Vertex.class);
+		inV=doc.get("inV",Vertex.class);
 	}
 	
 	
@@ -21,7 +29,8 @@ public class MyEdge implements Edge{
 	@Override
 	public String getId() {
 		// TODO Auto-generated method stub
-		return null;
+
+		return label;
 	}
 
 	@Override
@@ -52,26 +61,22 @@ public class MyEdge implements Edge{
 	public Vertex getVertex(Direction direction) throws IllegalArgumentException {
 		// TODO Auto-generated method stub
 		
-		Vertex v;
 		
-		if(direction==Direction.IN) {
-			
-		}
-		else if(direction==Direction.OUT) {
-			
-		}
+		if(direction==Direction.IN) return inV;
+		else if(direction==Direction.OUT) return outV;
 		else {
 			
+			return null;
 		}
 		
 		
-		return null;
+		
 	}
 
 	@Override
 	public String getLabel() {
 		// TODO Auto-generated method stub
-		return null;
+		return label;
 	}
 
 	@Override
