@@ -9,28 +9,11 @@ import com.tinkerpop.blueprints.revised.Edge;
 import com.tinkerpop.blueprints.revised.Vertex;
 
 public class MyEdge implements Edge{
-	
-	
-	
-	private String label;
-	private Vertex outV;
-	private Vertex inV;
-	
-	public MyEdge(Document doc) {
-		
-		label=doc.getString("label");
-		outV=doc.get("outV",Vertex.class);
-		inV=doc.get("inV",Vertex.class);
-	}
-	
-	
-	
-	
+
 	@Override
 	public String getId() {
 		// TODO Auto-generated method stub
-
-		return label;
+		return null;
 	}
 
 	@Override
@@ -60,23 +43,13 @@ public class MyEdge implements Edge{
 	@Override
 	public Vertex getVertex(Direction direction) throws IllegalArgumentException {
 		// TODO Auto-generated method stub
-		
-		
-		if(direction==Direction.IN) return inV;
-		else if(direction==Direction.OUT) return outV;
-		else {
-			
-			return null;
-		}
-		
-		
-		
+		return null;
 	}
 
 	@Override
 	public String getLabel() {
 		// TODO Auto-generated method stub
-		return label;
+		return null;
 	}
 
 	@Override
@@ -84,5 +57,9 @@ public class MyEdge implements Edge{
 		// TODO Auto-generated method stub
 		
 	}
+	
+	
+	
+	
 
 }

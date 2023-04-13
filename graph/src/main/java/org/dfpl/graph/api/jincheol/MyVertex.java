@@ -1,29 +1,38 @@
 package org.dfpl.graph.api.jincheol;
 
+
 import java.util.ArrayList;
 import java.util.Collection;
-
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
-import org.bson.Document;
+
 
 import com.tinkerpop.blueprints.revised.Direction;
 import com.tinkerpop.blueprints.revised.Edge;
 import com.tinkerpop.blueprints.revised.Vertex;
 
+
+
 public class MyVertex implements Vertex{
 
-	
 	private String id;
-	private ArrayList<Edge> inEdge;
-	private ArrayList<Edge> outEdge;
+	private Map<String,Object> property;
 	
+	/**
+	 * set id 
+	 * reset property
+	 * @param id
+	 */
+	public MyVertex(String id) {
+		
+		this.id=id;
+		this.property=new HashMap<>();
 	
-	public MyVertex(Document doc) {
-		id=doc.getString("_id");
-		inEdge=new ArrayList<>();
-		outEdge=new ArrayList<>();
+		
 	}
+	
 	
 	@Override
 	public String getId() {
@@ -34,64 +43,45 @@ public class MyVertex implements Vertex{
 	@Override
 	public Object getProperty(String key) {
 		// TODO Auto-generated method stub
-		return null;
+		
+		return property.get(key);
 	}
 
 	@Override
 	public Set<String> getPropertyKeys() {
 		// TODO Auto-generated method stub
-		return null;
+		return property.keySet();
 	}
 
 	@Override
 	public void setProperty(String key, Object value) {
 		// TODO Auto-generated method stub
 		
+		property.put(key, value);
 	}
 
 	@Override
 	public Object removeProperty(String key) {
 		// TODO Auto-generated method stub
-		return null;
+		return property.remove(key);
 	}
 
 	@Override
 	public Collection<Edge> getEdges(Direction direction, String... labels) throws IllegalArgumentException {
 		// TODO Auto-generated method stub
-		if(direction==Direction.IN) return inEdge;
-		else if(direction==Direction.OUT) return outEdge;
-		else return null;
+		//only out edges 
+		
+		ArrayList<Edge> edges=new ArrayList<>();
 		
 		
+		
+		return edges;
 	}
 
 	@Override
 	public Collection<Vertex> getVertices(Direction direction, String... labels) throws IllegalArgumentException {
 		// TODO Auto-generated method stub
-		ArrayList<Vertex> vertexList=new ArrayList<>();
-		
-		if(direction==Direction.IN) {
-			
-			
-			for(Edge edge:inEdge) {
-				vertexList.add(edge.getVertex(Direction.OUT));
-			}
-		}
-		else if(direction==Direction.OUT) {
-			for(Edge edge:outEdge) {
-				vertexList.add(edge.getVertex(Direction.IN));
-			}
-		}
-		else { //both
-			for(Edge edge:inEdge) {
-				vertexList.add(edge.getVertex(Direction.OUT));
-			}
-			for(Edge edge:outEdge) {
-				vertexList.add(edge.getVertex(Direction.IN));
-			}
-			
-		}
-		return vertexList;
+		return null;
 	}
 
 	@Override
@@ -112,13 +102,7 @@ public class MyVertex implements Vertex{
 		// TODO Auto-generated method stub
 		
 	}
+
 	
-	public void removeEinE(String edgeLabel) {
-		inEdge.remove(edgeLabel);
-	}
-	
-	public void removeEoutE(String edgeLabel) {
-		outEdge.remove(edgeLabel);
-	}
 
 }
