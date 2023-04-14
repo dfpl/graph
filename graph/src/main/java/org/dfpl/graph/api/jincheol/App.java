@@ -13,10 +13,13 @@ public class App {
 		// TODO Auto-generated method stub
 
 		
+		MyMongoDB md=new MyMongoDB();
 		
+		MyVertex v1=new MyVertex("1");
 		
-		
-		
+		md.insertVertex(v1);
+
+		md.setVertexProperty("1", "name", "jincheol");
 		
 	}
 

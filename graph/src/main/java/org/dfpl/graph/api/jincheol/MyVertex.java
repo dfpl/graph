@@ -7,8 +7,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-
-
 import com.tinkerpop.blueprints.revised.Direction;
 import com.tinkerpop.blueprints.revised.Edge;
 import com.tinkerpop.blueprints.revised.Vertex;
@@ -19,6 +17,7 @@ public class MyVertex implements Vertex{
 
 	private String id;
 	private Map<String,Object> property;
+
 	
 	/**
 	 * set id 
@@ -29,7 +28,6 @@ public class MyVertex implements Vertex{
 		
 		this.id=id;
 		this.property=new HashMap<>();
-	
 		
 	}
 	
@@ -37,33 +35,33 @@ public class MyVertex implements Vertex{
 	@Override
 	public String getId() {
 		// TODO Auto-generated method stub
-		return id;
+		return this.id;
 	}
 
 	@Override
 	public Object getProperty(String key) {
 		// TODO Auto-generated method stub
 		
-		return property.get(key);
+		return this.property.get(key);
 	}
 
 	@Override
 	public Set<String> getPropertyKeys() {
 		// TODO Auto-generated method stub
-		return property.keySet();
+		return this.property.keySet();
 	}
 
 	@Override
 	public void setProperty(String key, Object value) {
 		// TODO Auto-generated method stub
 		
-		property.put(key, value);
+		this.property.put(key, value);
 	}
 
 	@Override
 	public Object removeProperty(String key) {
 		// TODO Auto-generated method stub
-		return property.remove(key);
+		return this.property.remove(key);
 	}
 
 	@Override
@@ -73,6 +71,15 @@ public class MyVertex implements Vertex{
 		
 		ArrayList<Edge> edges=new ArrayList<>();
 		
+		if(direction==Direction.IN) {
+			
+		}
+		else if(direction==Direction.OUT) {
+			
+		}
+		else {
+			
+		}
 		
 		
 		return edges;
