@@ -142,7 +142,7 @@ public class MyGraph implements Graph{
 	public Edge getEdge(Vertex outVertex, Vertex inVertex, String label) {
 		// TODO Auto-generated method stub
 		
-		if(this.md.getCollection("edge").find(Filters.eq("_id", label)).first()==null) {
+		if(this.md.getCollection("edge").find(Filters.eq("_id", label)).first()!=null) {
 			
 			
 			Document edgeDoc=this.md.getCollection("edge").find(Filters.eq("_id", label)).first();

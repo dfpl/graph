@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import org.bson.Document;
 
 import com.tinkerpop.blueprints.revised.Direction;
 import com.tinkerpop.blueprints.revised.Edge;
@@ -15,18 +14,19 @@ public class MyEdge implements Edge{
 	private String id;
 	private String label;
 	private Map<String,Object> property;
-	private String sourceID;
-	private String targetID;
+	private Vertex source; //out vertex
+	private Vertex target; //in vertex
 	
 	
 	public MyEdge(Vertex source,Vertex target,String label) {
 		
-		this.sourceID=source.getId();
-		this.targetID=target.getId();
+		this.source=source;
+		this.target=target;
 		this.label=label;
-		this.id=label;
+		this.id=source.getId()+"|"+label+target.getId();
 		this.property=new HashMap<>();
 	}
+	
 	
 	@Override
 	public String getId() {
@@ -61,7 +61,14 @@ public class MyEdge implements Edge{
 	@Override
 	public Vertex getVertex(Direction direction) throws IllegalArgumentException {
 		// TODO Auto-generated method stub
-		return null;
+		
+		if(direction==Direction.IN) return this.target;
+		else if(direction==Direction.OUT) return this.source;
+		else throw new IllegalArgumentException("not use both");
+		
+		
+		
+		
 	}
 
 	@Override

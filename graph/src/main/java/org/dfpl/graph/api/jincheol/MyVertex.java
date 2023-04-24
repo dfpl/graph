@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+
 import com.tinkerpop.blueprints.revised.Direction;
 import com.tinkerpop.blueprints.revised.Edge;
 import com.tinkerpop.blueprints.revised.Vertex;
@@ -17,7 +18,9 @@ public class MyVertex implements Vertex{
 
 	private String id;
 	private Map<String,Object> property;
-
+	private ArrayList<Edge> inEdges; //income edge
+	private ArrayList<Edge> outEdges; //outcome edge
+	
 	
 	/**
 	 * set id 
@@ -28,8 +31,19 @@ public class MyVertex implements Vertex{
 		
 		this.id=id;
 		this.property=new HashMap<>();
+		this.inEdges=new ArrayList<>();
+		this.outEdges=new ArrayList<>();
 		
 	}
+	
+	public void addInEdges(Edge inEdge) {
+		this.inEdges.add(inEdge);
+	}
+	
+	public void addOutEdges(Edge outEdge) {
+		this.outEdges.add(outEdge);
+	}
+	
 	
 	
 	@Override
@@ -44,6 +58,8 @@ public class MyVertex implements Vertex{
 		
 		return this.property.get(key);
 	}
+	
+
 
 	@Override
 	public Set<String> getPropertyKeys() {
@@ -63,32 +79,144 @@ public class MyVertex implements Vertex{
 		// TODO Auto-generated method stub
 		return this.property.remove(key);
 	}
-
+	
+	
+	
+	
 	@Override
 	public Collection<Edge> getEdges(Direction direction, String... labels) throws IllegalArgumentException {
 		// TODO Auto-generated method stub
-		//only out edges 
 		
-		ArrayList<Edge> edges=new ArrayList<>();
 		
-		if(direction==Direction.IN) {
-			
-		}
-		else if(direction==Direction.OUT) {
-			
+		ArrayList<Edge> list=new ArrayList<>();
+		
+		
+		
+		if(labels.length!=0) {
+			for(String edgeLabel:labels) {
+				if(direction==Direction.IN) {
+					
+					for(Edge edge:this.inEdges) {
+						if(edge.getLabel()==edgeLabel) list.add(edge);
+					}
+					
+				}
+				else if(direction==Direction.OUT) {
+					for(Edge edge:this.outEdges) {
+						if(edge.getLabel()==edgeLabel) list.add(edge);
+					}
+				}
+				else { //both
+					ArrayList<Edge> edges=new ArrayList<>();
+					edges.addAll(this.inEdges);
+					edges.addAll(this.outEdges);
+					
+					for(Edge edge:edges) {
+						if(edge.getLabel()==edgeLabel) list.add(edge);
+					}
+				}
+			}
 		}
 		else {
+			if(direction==Direction.IN) {
+				
+				for(Edge edge:this.inEdges) {
+					list.add(edge);
+				}
+				
+			}
+			else if(direction==Direction.OUT) {
+				for(Edge edge:this.outEdges) {
+					list.add(edge);
+				}
+			}
+			else { //both
+				ArrayList<Edge> edges=new ArrayList<>();
+				edges.addAll(this.inEdges);
+				edges.addAll(this.outEdges);
+				
+				for(Edge edge:edges) {
+					list.add(edge);
+				}
+			}
 			
 		}
 		
 		
-		return edges;
+		
+		
+		return list;
+		
+		
+		
+		
+		
 	}
 
 	@Override
 	public Collection<Vertex> getVertices(Direction direction, String... labels) throws IllegalArgumentException {
 		// TODO Auto-generated method stub
-		return null;
+		
+		
+		ArrayList<Vertex> vertexList=new ArrayList<>();
+		
+		if(labels.length!=0) {
+			for(String edgeLabel:labels) {
+				if(direction==Direction.IN) {
+					for(Edge edge:this.inEdges) {
+						if(edge.getLabel()==edgeLabel) vertexList.add(edge.getVertex(Direction.IN));
+					}
+				}
+				else if(direction==Direction.OUT) {
+					for(Edge edge:this.outEdges) {
+						if(edge.getLabel()==edgeLabel) vertexList.add(edge.getVertex(Direction.OUT));
+					}
+					
+				}
+				else {
+					ArrayList<Edge> bothList=new ArrayList<>();
+					bothList.addAll(this.inEdges);
+					bothList.addAll(outEdges);
+					
+					for(Edge edge:bothList) {
+						if(edge.getLabel()==edgeLabel) vertexList.add(edge.getVertex(Direction.OUT));
+					}
+					
+				}
+				
+			}
+		}
+		else {
+			
+				if(direction==Direction.IN) {
+					for(Edge edge:this.inEdges) {
+						vertexList.add(edge.getVertex(Direction.IN));
+					}
+				}
+				else if(direction==Direction.OUT) {
+					for(Edge edge:this.outEdges) {
+						vertexList.add(edge.getVertex(Direction.OUT));
+					}
+					
+				}
+				else {
+					ArrayList<Edge> bothList=new ArrayList<>();
+					bothList.addAll(this.inEdges);
+					bothList.addAll(outEdges);
+					
+					for(Edge edge:bothList) {
+						vertexList.add(edge.getVertex(Direction.OUT));
+					}
+					
+				}
+				
+			
+		}
+		
+		
+		
+		
+		return vertexList;
 	}
 
 	@Override
@@ -101,7 +229,44 @@ public class MyVertex implements Vertex{
 	public Collection<Vertex> getVertices(Direction direction, String key, Object value, String... labels)
 			throws IllegalArgumentException {
 		// TODO Auto-generated method stub
-		return null;
+		ArrayList<Vertex> vertexList=new ArrayList<>();
+		
+		for(String edgeLabel:labels) {
+			if(direction==Direction.IN) {
+				for(Edge edge:this.inEdges) {
+					if(edge.getLabel()==edgeLabel&&edge.getProperty(key)==value) {
+						
+						vertexList.add(edge.getVertex(Direction.IN));
+						
+					}
+				}
+			}
+			else if(direction==Direction.OUT) {
+				for(Edge edge:this.outEdges) {
+					if(edge.getLabel()==edgeLabel&&edge.getProperty(key)==value) {
+						vertexList.add(edge.getVertex(Direction.IN));
+					}
+						
+				}
+				
+			}
+			else {
+				ArrayList<Edge> bothList=new ArrayList<>();
+				bothList.addAll(this.inEdges);
+				bothList.addAll(outEdges);
+				
+				for(Edge edge:bothList) {
+					if(edge.getLabel()==edgeLabel&&edge.getProperty(key)==value) {
+						vertexList.add(edge.getVertex(Direction.IN));
+					}
+				}
+				
+			}
+			
+		}
+		
+		
+		return vertexList;
 	}
 
 	@Override
