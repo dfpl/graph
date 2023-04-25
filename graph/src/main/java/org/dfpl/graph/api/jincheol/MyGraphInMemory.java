@@ -35,6 +35,7 @@ public class MyGraphInMemory implements Graph{
 		}
 		
 		MyVertex vertex=new MyVertex(id);
+		
 		if(this.vertecies.get(id)!=null) {
 			System.out.println("already exist vertex");
 			return this.vertecies.get(id);

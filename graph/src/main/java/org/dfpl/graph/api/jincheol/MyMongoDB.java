@@ -2,7 +2,7 @@ package org.dfpl.graph.api.jincheol;
 
 
 import org.bson.Document;
-import org.bson.conversions.Bson;
+
 
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
@@ -15,7 +15,7 @@ public class MyMongoDB {
 
 	
 	private static final String url="mongodb://localhost:27017";
-	private static final String database="dblp";
+	private static final String database="CollegeMsg";
 	private MongoDatabase mongoDB;
 	private MongoCollection<Document> collection;
 	
@@ -37,29 +37,7 @@ public class MyMongoDB {
 		return this.collection=mongoDB.getCollection(collectionName);
 	}
 	
-	public void insertVertex(MyVertex vertex) {
-		
-		
-		
-		Document doc=new Document();
-		Document propertyDoc=new Document();
-		
-		doc.append("_id", vertex.getId());
-		
-		if(vertex.getPropertyKeys()==null) {
-			//property empty
-		}
-		else {
-			for(String key:vertex.getPropertyKeys()) {
-				propertyDoc.put(key, vertex.getProperty(key));
-			}
-		}
-				
-		doc.append("property", propertyDoc);
-		
-		collection.insertOne(doc);
-		
-	}
+	
 	
 	
 	/**

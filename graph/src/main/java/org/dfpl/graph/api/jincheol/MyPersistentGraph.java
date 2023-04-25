@@ -1,5 +1,6 @@
 package org.dfpl.graph.api.jincheol;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 import org.bson.Document;
@@ -9,11 +10,11 @@ import com.tinkerpop.blueprints.revised.Edge;
 import com.tinkerpop.blueprints.revised.Graph;
 import com.tinkerpop.blueprints.revised.Vertex;
 
-public class MyGraph implements Graph{
+public class MyPersistentGraph implements Graph{
 	
 	private MyMongoDB md;
 	
-	public MyGraph() {
+	public MyPersistentGraph() {
 		
 		this.md=new MyMongoDB();
 		
@@ -31,16 +32,22 @@ public class MyGraph implements Graph{
 		if(this.md.getCollection("vertex").find(Filters.eq("_id", id)).first()==null) {
 			Document doc=new Document();
 			Document propertyDoc=new Document();
+			ArrayList<String> inEdgeIDs=new ArrayList<>();
+			ArrayList<String> outEdgeIDs=new ArrayList<>();
+			
 			doc.append("_id", id);	
 			doc.append("property", propertyDoc);
+			doc.append("inEdgeIDs", inEdgeIDs);
+			doc.append("outEdgeIDs", outEdgeIDs);
+			
+			
 			this.md.getCollection("vertex").insertOne(doc);
 			
 			MyVertex vertex=new MyVertex(id);
 			return vertex;
 		}
 		else {
-			System.out.println("Already Exist Vertex");
-			return null;
+			throw new IllegalArgumentException("vertex alread exist");
 		}
 		
 		
@@ -77,8 +84,7 @@ public class MyGraph implements Graph{
 			return vertex;
 		}
 		else {
-			System.out.println("No Exist");
-			return null;
+			throw new IllegalArgumentException("no exist vertex id");
 		}
 		
 	}
