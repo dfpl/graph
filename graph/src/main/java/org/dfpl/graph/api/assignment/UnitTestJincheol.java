@@ -1,5 +1,6 @@
 package org.dfpl.graph.api.assignment;
 
+import org.dfpl.graph.api.jincheol.MyGraphInMemory;
 import org.dfpl.graph.api.memory.InMemoryGraph;
 
 import com.tinkerpop.blueprints.revised.Direction;
@@ -7,15 +8,16 @@ import com.tinkerpop.blueprints.revised.Edge;
 import com.tinkerpop.blueprints.revised.Graph;
 import com.tinkerpop.blueprints.revised.Vertex;
 
-public class UnitTest {
+public class UnitTestJincheol {
 	@SuppressWarnings("unused")
 	public static void main(String[] args) throws Exception {
 		String dbID = "root";
 		String dbPW = "1234";
 		String dbName = "team?";
 
-		Graph g = new InMemoryGraph();
+		//Graph g = new InMemoryGraph();
 		// Graph g = new PersistentGraph(dbID, dbPW, dbName);
+		Graph g = new MyGraphInMemory();
 
 		Vertex v1 = g.addVertex("1");
 		System.out.println("[1] " + v1.getId());
