@@ -3,7 +3,6 @@ package org.dfpl.graph.api.assignment;
 import java.io.BufferedReader;
 import java.io.FileReader;
 
-import org.dfpl.graph.api.jincheol.MyPersistentGraph;
 import org.dfpl.graph.api.memory.InMemoryGraph;
 
 import com.tinkerpop.blueprints.revised.Direction;
@@ -24,8 +23,7 @@ public class SmallDataTest {
 
         // 참고: 평가를 위한 데이터셋은 보다 작은 데이터셋을 활용 (예: CollegeMsg.txt, http://snap.stanford.edu/data/index.html)
         // 참고: 데이터셋 변경 가능
-        //String fileName = "e:\\CollegeMsg.txt";
-    	String fileName = "D:\\mydata\\CollegeMsg.txt";
+        String fileName = "e:\\CollegeMsg.txt";
         String delimiter = "\\s";
         String dbID = "root";
         String dbPW = "1234";
@@ -33,8 +31,7 @@ public class SmallDataTest {
 
         BufferedReader r = new BufferedReader(new FileReader(fileName));
 
-        //Graph g = new InMemoryGraph();
-        MyPersistentGraph g=new MyPersistentGraph();
+        Graph g = new InMemoryGraph();
         // PersistentGraph의 생성자는 빈 생성자 (id는 root, pw는 1234, db name은 팀 이름으로) 혹은
         // (String dbID, String dbPW, String dbName) 의 생성자를 가질 수 있음
         //Graph g = new PersistentGraph(dbID, dbPW, dbName);
