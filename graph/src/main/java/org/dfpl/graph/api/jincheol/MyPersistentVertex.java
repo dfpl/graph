@@ -21,8 +21,8 @@ public class MyPersistentVertex implements Vertex{
 	
 	
 	
-	public MyPersistentVertex(String id) {
-		this.md=new MyMongoDB();
+	public MyPersistentVertex(String id,MyMongoDB md) {
+		this.md=md;
 		this.id=id;
 		
 		
@@ -40,8 +40,8 @@ public class MyPersistentVertex implements Vertex{
 		// TODO Auto-generated method stub
 		if(this.md.getCollection("vertex").find(Filters.eq("_id",this.id)).first()!=null) {
 			
-			Document propertyDoc=this.md.getCollection("vertex").find(Filters.eq("_id", this.id)).first();
-			return propertyDoc;
+			Document propertyDoc=(Document) this.md.getCollection("vertex").find(Filters.eq("_id", this.id)).first().get("property");
+			return propertyDoc.get(key);
 		}
 		else {
 			throw new IllegalArgumentException("no exist vertex id");
@@ -55,7 +55,7 @@ public class MyPersistentVertex implements Vertex{
 		
 		if(this.md.getCollection("vertex").find(Filters.eq("_id",this.id)).first()!=null) {
 			
-			Document propertyDoc=this.md.getCollection("vertex").find(Filters.eq("_id", this.id)).first();
+			Document propertyDoc=(Document) this.md.getCollection("vertex").find(Filters.eq("_id", this.id)).first().get("property");
 			
 			return propertyDoc.keySet();
 			
@@ -111,24 +111,29 @@ public class MyPersistentVertex implements Vertex{
 					@SuppressWarnings("unchecked")
 					ArrayList<String> inEdgeIDs=(ArrayList<String>) this.md.getCollection("vertex").find(Filters.eq("_id", id)).first().get("inEdgeIDs");
 					
-					
-					
-					
-					for(String edgeID:inEdgeIDs) {
-						
-						Document edgeDoc=this.md.getCollection("edge").find(Filters.eq("_id", edgeID)).first();
-						for(String label:labels) {
+					if(inEdgeIDs.isEmpty()) {
+						//System.out.println("not has in edge");
+					}
+					else {
+						for(String edgeID:inEdgeIDs) {
 							
-							if(edgeDoc.get("label").equals(label)) {
+							Document edgeDoc=this.md.getCollection("edge").find(Filters.eq("_id", edgeID)).first();
+							for(String label:labels) {
 								
+								if(edgeDoc.get("label").equals(label)) {
+									
 
-								MyPersistentEdge edge=new MyPersistentEdge((String)edgeDoc.get("_id"),(String)edgeDoc.get("label"),new MyPersistentVertex((String)edgeDoc.get("source")),new MyPersistentVertex((String)edgeDoc.get("target")));
-								edges.add(edge);
+									MyPersistentEdge edge=new MyPersistentEdge((String)edgeDoc.get("_id"),(String)edgeDoc.get("label"),md);
+									edges.add(edge);
+								}
+								
+								
 							}
-							
-							
 						}
 					}
+					
+					
+					
 					
 					
 					
@@ -138,21 +143,28 @@ public class MyPersistentVertex implements Vertex{
 					@SuppressWarnings("unchecked")
 					ArrayList<String> outEdgeIDs=(ArrayList<String>) this.md.getCollection("vertex").find(Filters.eq("_id", id)).first().get("outEdgeIDs");
 					
-					for(String edgeID:outEdgeIDs) {
-						
-						Document edgeDoc=this.md.getCollection("edge").find(Filters.eq("_id", edgeID)).first();
-						for(String label:labels) {
+					if(outEdgeIDs.isEmpty()) {
+						//System.out.println("not has out edge");
+					}
+					else {
+						for(String edgeID:outEdgeIDs) {
 							
-							if(edgeDoc.get("label").equals(label)) {
+							Document edgeDoc=this.md.getCollection("edge").find(Filters.eq("_id", edgeID)).first();
+							for(String label:labels) {
 								
+								if(edgeDoc.get("label").equals(label)) {
+									
 
-								MyPersistentEdge edge=new MyPersistentEdge((String)edgeDoc.get("_id"),(String)edgeDoc.get("label"),new MyPersistentVertex((String)edgeDoc.get("source")),new MyPersistentVertex((String)edgeDoc.get("target")));
-								edges.add(edge);
+									MyPersistentEdge edge=new MyPersistentEdge((String)edgeDoc.get("_id"),(String)edgeDoc.get("label"),md);
+									edges.add(edge);
+								}
+								
+								
 							}
-							
-							
 						}
 					}
+					
+					
 				}
 				else { //both
 					@SuppressWarnings("unchecked")
@@ -164,23 +176,28 @@ public class MyPersistentVertex implements Vertex{
 					inEdgeIDs.addAll(outEdgeIDs);
 					ArrayList<String> bothEdgeIDs=inEdgeIDs;
 					
-					
-					
-					for(String edgeID:bothEdgeIDs) {
-						
-						Document edgeDoc=this.md.getCollection("edge").find(Filters.eq("_id", edgeID)).first();
-						for(String label:labels) {
+					if(bothEdgeIDs.isEmpty()) {
+						//System.out.println("not has both edge");
+					}
+					else {
+						for(String edgeID:bothEdgeIDs) {
 							
-							if(edgeDoc.get("label").equals(label)) {
+							Document edgeDoc=this.md.getCollection("edge").find(Filters.eq("_id", edgeID)).first();
+							for(String label:labels) {
 								
+								if(edgeDoc.get("label").equals(label)) {
+									
 
-								MyPersistentEdge edge=new MyPersistentEdge((String)edgeDoc.get("_id"),(String)edgeDoc.get("label"),new MyPersistentVertex((String)edgeDoc.get("source")),new MyPersistentVertex((String)edgeDoc.get("target")));
-								edges.add(edge);
+									MyPersistentEdge edge=new MyPersistentEdge((String)edgeDoc.get("_id"),(String)edgeDoc.get("label"),md);
+									edges.add(edge);
+								}
+								
+								
 							}
-							
-							
 						}
 					}
+					
+					
 				}
 				
 				
@@ -194,16 +211,23 @@ public class MyPersistentVertex implements Vertex{
 				if(direction==Direction.IN) {
 					@SuppressWarnings("unchecked")
 					ArrayList<String> inEdgeIDs=(ArrayList<String>) this.md.getCollection("vertex").find(Filters.eq("_id", id)).first().get("inEdgeIDs");
-
-					for(String edgeID:inEdgeIDs) {
-						
-						Document edgeDoc=this.md.getCollection("edge").find(Filters.eq("_id", edgeID)).first();
-						
-
-						MyPersistentEdge edge=new MyPersistentEdge((String)edgeDoc.get("_id"),(String)edgeDoc.get("label"),new MyPersistentVertex((String)edgeDoc.get("source")),new MyPersistentVertex((String)edgeDoc.get("target")));
-						edges.add(edge);
-
+					
+					if(inEdgeIDs.isEmpty()) {
+						//System.out.println("not has in edge");
 					}
+					{
+						for(String edgeID:inEdgeIDs) {
+							
+							Document edgeDoc=this.md.getCollection("edge").find(Filters.eq("_id", edgeID)).first();
+							
+
+							MyPersistentEdge edge=new MyPersistentEdge((String)edgeDoc.get("_id"),(String)edgeDoc.get("label"),md);
+							edges.add(edge);
+
+						}
+					}
+					
+					
 					
 					
 					
@@ -213,15 +237,22 @@ public class MyPersistentVertex implements Vertex{
 					@SuppressWarnings("unchecked")
 					ArrayList<String> outEdgeIDs=(ArrayList<String>) this.md.getCollection("vertex").find(Filters.eq("_id", id)).first().get("outEdgeIDs");
 					
-					for(String edgeID:outEdgeIDs) {
-						
-						Document edgeDoc=this.md.getCollection("edge").find(Filters.eq("_id", edgeID)).first();
-						
-
-						MyPersistentEdge edge=new MyPersistentEdge((String)edgeDoc.get("_id"),(String)edgeDoc.get("label"),new MyPersistentVertex((String)edgeDoc.get("source")),new MyPersistentVertex((String)edgeDoc.get("target")));
-						edges.add(edge);
-
+					if(outEdgeIDs.isEmpty()) {
+						//System.out.println("not has out edge");
 					}
+					else {
+						for(String edgeID:outEdgeIDs) {
+							
+							Document edgeDoc=this.md.getCollection("edge").find(Filters.eq("_id", edgeID)).first();
+							
+
+							MyPersistentEdge edge=new MyPersistentEdge((String)edgeDoc.get("_id"),(String)edgeDoc.get("label"),md);
+							edges.add(edge);
+
+						}
+					}
+					
+					
 				}
 				else { //both
 					@SuppressWarnings("unchecked")
@@ -233,17 +264,23 @@ public class MyPersistentVertex implements Vertex{
 					inEdgeIDs.addAll(outEdgeIDs);
 					ArrayList<String> bothEdgeIDs=inEdgeIDs;
 					
-					
-					
-					for(String edgeID:bothEdgeIDs) {
+					if(bothEdgeIDs.isEmpty()) {
 						
-						Document edgeDoc=this.md.getCollection("edge").find(Filters.eq("_id", edgeID)).first();
-						
-
-						MyPersistentEdge edge=new MyPersistentEdge((String)edgeDoc.get("_id"),(String)edgeDoc.get("label"),new MyPersistentVertex((String)edgeDoc.get("source")),new MyPersistentVertex((String)edgeDoc.get("target")));
-						edges.add(edge);
-
+						//System.out.println("not has both edge");
 					}
+					else{
+						for(String edgeID:bothEdgeIDs) {
+							
+							Document edgeDoc=this.md.getCollection("edge").find(Filters.eq("_id", edgeID)).first();
+							
+
+							MyPersistentEdge edge=new MyPersistentEdge((String)edgeDoc.get("_id"),(String)edgeDoc.get("label"),md);
+							edges.add(edge);
+
+						}
+					}
+					
+					
 				}
 
 				
@@ -277,29 +314,34 @@ public class MyPersistentVertex implements Vertex{
 					ArrayList<String> inEdgeIDs=(ArrayList<String>) this.md.getCollection("vertex").find(Filters.eq("_id", id)).first().get("inEdgeIDs");
 					
 					
-					
-					
-					for(String edgeID:inEdgeIDs) {
-						
-						Document edgeDoc=this.md.getCollection("edge").find(Filters.eq("_id", edgeID)).first();
-						for(String label:labels) {
+					if(inEdgeIDs.isEmpty()) {
+						//System.out.println("not has in edge");
+					}
+					else {
+						for(String edgeID:inEdgeIDs) {
 							
-							if(edgeDoc.get("label").equals(label)) {
+							Document edgeDoc=this.md.getCollection("edge").find(Filters.eq("_id", edgeID)).first();
+							for(String label:labels) {
 								
+								if(edgeDoc.get("label").equals(label)) {
+									
 
-								MyPersistentEdge edge=new MyPersistentEdge((String)edgeDoc.get("_id"),(String)edgeDoc.get("label"),new MyPersistentVertex((String)edgeDoc.get("source")),new MyPersistentVertex((String)edgeDoc.get("target")));
-								edges.add(edge);
+									MyPersistentEdge edge=new MyPersistentEdge((String)edgeDoc.get("_id"),(String)edgeDoc.get("label"),md);
+									edges.add(edge);
+								}
+								
+								
 							}
+						}
+						
+						for(Edge edge:edges){
 							
+							vertecies.add(edge.getVertex(Direction.IN));
 							
 						}
 					}
 					
-					for(Edge edge:edges){
-						
-						vertecies.add(edge.getVertex(Direction.IN));
-						
-					}
+					
 					
 					
 				}
@@ -307,27 +349,34 @@ public class MyPersistentVertex implements Vertex{
 					@SuppressWarnings("unchecked")
 					ArrayList<String> outEdgeIDs=(ArrayList<String>) this.md.getCollection("vertex").find(Filters.eq("_id", id)).first().get("outEdgeIDs");
 					
-					for(String edgeID:outEdgeIDs) {
-						
-						Document edgeDoc=this.md.getCollection("edge").find(Filters.eq("_id", edgeID)).first();
-						for(String label:labels) {
+					if(outEdgeIDs.isEmpty()) {
+						//System.out.println("not has out edge");
+					}
+					else {
+						for(String edgeID:outEdgeIDs) {
 							
-							if(edgeDoc.get("label").equals(label)) {
+							Document edgeDoc=this.md.getCollection("edge").find(Filters.eq("_id", edgeID)).first();
+							for(String label:labels) {
 								
+								if(edgeDoc.get("label").equals(label)) {
+									
 
-								MyPersistentEdge edge=new MyPersistentEdge((String)edgeDoc.get("_id"),(String)edgeDoc.get("label"),new MyPersistentVertex((String)edgeDoc.get("source")),new MyPersistentVertex((String)edgeDoc.get("target")));
-								edges.add(edge);
+									MyPersistentEdge edge=new MyPersistentEdge((String)edgeDoc.get("_id"),(String)edgeDoc.get("label"),md);
+									edges.add(edge);
+								}
+								
+								
 							}
+						}
+						
+						for(Edge edge:edges){
 							
+							vertecies.add(edge.getVertex(Direction.OUT));
 							
 						}
 					}
 					
-					for(Edge edge:edges){
-						
-						vertecies.add(edge.getVertex(Direction.OUT));
-						
-					}
+					
 				}
 				else { //both
 					@SuppressWarnings("unchecked")
@@ -337,44 +386,54 @@ public class MyPersistentVertex implements Vertex{
 					ArrayList<String> outEdgeIDs=(ArrayList<String>) this.md.getCollection("vertex").find(Filters.eq("_id", id)).first().get("outEdgeIDs");
 					
 					
-					
-					
-					
-					for(String edgeID:inEdgeIDs) {
-						
-						Document edgeDoc=this.md.getCollection("edge").find(Filters.eq("_id", edgeID)).first();
-						for(String label:labels) {
+					if(inEdgeIDs.isEmpty()) {
+						//System.out.println("not has in edge");
+					}
+					else {
+						for(String edgeID:inEdgeIDs) {
 							
-							if(edgeDoc.get("label").equals(label)) {
+							Document edgeDoc=this.md.getCollection("edge").find(Filters.eq("_id", edgeID)).first();
+							for(String label:labels) {
 								
+								if(edgeDoc.get("label").equals(label)) {
+									
 
-								MyPersistentEdge edge=new MyPersistentEdge((String)edgeDoc.get("_id"),(String)edgeDoc.get("label"),new MyPersistentVertex((String)edgeDoc.get("source")),new MyPersistentVertex((String)edgeDoc.get("target")));
-								vertecies.add(edge.getVertex(Direction.IN));
+									MyPersistentEdge edge=new MyPersistentEdge((String)edgeDoc.get("_id"),(String)edgeDoc.get("label"),md);
+									vertecies.add(edge.getVertex(Direction.IN));
+								}
+								
+								
 							}
 							
 							
 						}
-						
-						
 					}
 					
-					for(String edgeID:outEdgeIDs) {
-						
-						Document edgeDoc=this.md.getCollection("edge").find(Filters.eq("_id", edgeID)).first();
-						for(String label:labels) {
+					
+					if(outEdgeIDs.isEmpty()) {
+						//System.out.println("not has out edge");
+					}
+					else {
+						for(String edgeID:outEdgeIDs) {
 							
-							if(edgeDoc.get("label").equals(label)) {
+							Document edgeDoc=this.md.getCollection("edge").find(Filters.eq("_id", edgeID)).first();
+							for(String label:labels) {
 								
+								if(edgeDoc.get("label").equals(label)) {
+									
 
-								MyPersistentEdge edge=new MyPersistentEdge((String)edgeDoc.get("_id"),(String)edgeDoc.get("label"),new MyPersistentVertex((String)edgeDoc.get("source")),new MyPersistentVertex((String)edgeDoc.get("target")));
-								vertecies.add(edge.getVertex(Direction.OUT));
+									MyPersistentEdge edge=new MyPersistentEdge((String)edgeDoc.get("_id"),(String)edgeDoc.get("label"),md);
+									vertecies.add(edge.getVertex(Direction.OUT));
+								}
+								
+								
 							}
 							
 							
 						}
-						
-						
 					}
+					
+					
 					
 					
 				}
@@ -390,45 +449,62 @@ public class MyPersistentVertex implements Vertex{
 				if(direction==Direction.IN) {
 					@SuppressWarnings("unchecked")
 					ArrayList<String> inEdgeIDs=(ArrayList<String>) this.md.getCollection("vertex").find(Filters.eq("_id", id)).first().get("inEdgeIDs");
-
-					for(String edgeID:inEdgeIDs) {
+					
+					
+					if(inEdgeIDs.isEmpty()) {
+						//System.out.println("not has in edge");
 						
-						Document edgeDoc=this.md.getCollection("edge").find(Filters.eq("_id", edgeID)).first();
+					}
+					else{
+						for(String edgeID:inEdgeIDs) {
+							
+							Document edgeDoc=this.md.getCollection("edge").find(Filters.eq("_id", edgeID)).first();
+							
+
+							MyPersistentEdge edge=new MyPersistentEdge((String)edgeDoc.get("_id"),(String)edgeDoc.get("label"),md);
+							edges.add(edge);
+
+						}
 						
-
-						MyPersistentEdge edge=new MyPersistentEdge((String)edgeDoc.get("_id"),(String)edgeDoc.get("label"),new MyPersistentVertex((String)edgeDoc.get("source")),new MyPersistentVertex((String)edgeDoc.get("target")));
-						edges.add(edge);
-
+						for(Edge edge:edges){
+							
+							vertecies.add(edge.getVertex(Direction.IN));
+							
+						}
 					}
 					
-					for(Edge edge:edges){
-						
-						vertecies.add(edge.getVertex(Direction.IN));
-						
-					}
 					
 					
 				}
 				else if(direction==Direction.OUT) {
+					
 					@SuppressWarnings("unchecked")
 					ArrayList<String> outEdgeIDs=(ArrayList<String>) this.md.getCollection("vertex").find(Filters.eq("_id", id)).first().get("outEdgeIDs");
 					
-					for(String edgeID:outEdgeIDs) {
+					if(outEdgeIDs.isEmpty()) {
+						//System.out.println("not has out edge");
 						
-						Document edgeDoc=this.md.getCollection("edge").find(Filters.eq("_id", edgeID)).first();
+					}
+					else {
+						for(String edgeID:outEdgeIDs) {
+							
+							Document edgeDoc=this.md.getCollection("edge").find(Filters.eq("_id", edgeID)).first();
+							
+
+							MyPersistentEdge edge=new MyPersistentEdge((String)edgeDoc.get("_id"),(String)edgeDoc.get("label"),md);
+							edges.add(edge);
+
+						}
 						
-
-						MyPersistentEdge edge=new MyPersistentEdge((String)edgeDoc.get("_id"),(String)edgeDoc.get("label"),new MyPersistentVertex((String)edgeDoc.get("source")),new MyPersistentVertex((String)edgeDoc.get("target")));
-						edges.add(edge);
-
+						
+						for(Edge edge:edges){
+							
+							vertecies.add(edge.getVertex(Direction.OUT));
+							
+						}
 					}
 					
 					
-					for(Edge edge:edges){
-						
-						vertecies.add(edge.getVertex(Direction.OUT));
-						
-					}
 				}
 				else { //both
 					@SuppressWarnings("unchecked")
@@ -437,27 +513,38 @@ public class MyPersistentVertex implements Vertex{
 					@SuppressWarnings("unchecked")
 					ArrayList<String> outEdgeIDs=(ArrayList<String>) this.md.getCollection("vertex").find(Filters.eq("_id", id)).first().get("outEdgeIDs");
 					
-					for(String edgeID:inEdgeIDs) {
-						
-						Document edgeDoc=this.md.getCollection("edge").find(Filters.eq("_id", edgeID)).first();
-						
-						MyPersistentEdge edge=new MyPersistentEdge((String)edgeDoc.get("_id"),(String)edgeDoc.get("label"),new MyPersistentVertex((String)edgeDoc.get("source")),new MyPersistentVertex((String)edgeDoc.get("target")));
-						vertecies.add(edge.getVertex(Direction.IN));
+					
+					if(inEdgeIDs.isEmpty()) {
+						//System.out.println("not has in edge");
+					}
+					else {
+						for(String edgeID:inEdgeIDs) {
 							
+							Document edgeDoc=this.md.getCollection("edge").find(Filters.eq("_id", edgeID)).first();
+							
+							MyPersistentEdge edge=new MyPersistentEdge((String)edgeDoc.get("_id"),(String)edgeDoc.get("label"),md);
+							vertecies.add(edge.getVertex(Direction.IN));
+								
 
+						}
 					}
 					
-					for(String edgeID:outEdgeIDs) {
-						
-						Document edgeDoc=this.md.getCollection("edge").find(Filters.eq("_id", edgeID)).first();
-						
-						MyPersistentEdge edge=new MyPersistentEdge((String)edgeDoc.get("_id"),(String)edgeDoc.get("label"),new MyPersistentVertex((String)edgeDoc.get("source")),new MyPersistentVertex((String)edgeDoc.get("target")));
-						vertecies.add(edge.getVertex(Direction.OUT));
-							
-
-						
-						
+					
+					if(outEdgeIDs.isEmpty()) {
+						//System.out.println("not has out edge");
 					}
+					else {
+						for(String edgeID:outEdgeIDs) {
+							
+							Document edgeDoc=this.md.getCollection("edge").find(Filters.eq("_id", edgeID)).first();
+							
+							MyPersistentEdge edge=new MyPersistentEdge((String)edgeDoc.get("_id"),(String)edgeDoc.get("label"),md);
+							vertecies.add(edge.getVertex(Direction.OUT));
+	
+						}
+					}
+					
+					
 				}
 
 				
@@ -475,8 +562,481 @@ public class MyPersistentVertex implements Vertex{
 	@Override
 	public Collection<Vertex> getTwoHopVertices(Direction direction, String... labels) throws IllegalArgumentException {
 		// TODO Auto-generated method stub
-		return null;
+
+		
+		
+		
+		
+		if(this.md.getCollection("vertex").find(Filters.eq("_id",this.id)).first()!=null) {
+			
+			ArrayList<Edge> edges=new ArrayList<>();
+			ArrayList<Vertex> vertecies=new ArrayList<>();
+			
+			
+			if(labels.length!=0) {
+				
+				
+				
+				if(direction==Direction.IN) {
+					@SuppressWarnings("unchecked")
+					ArrayList<String> inEdgeIDs=(ArrayList<String>) this.md.getCollection("vertex").find(Filters.eq("_id", id)).first().get("inEdgeIDs");
+					
+					
+					if(inEdgeIDs.isEmpty()) {
+						//System.out.println("not has in edge");
+					}
+					else {
+						for(String edgeID:inEdgeIDs) {
+
+							String inVertexID=(String) this.md.getCollection("edge").find(Filters.eq("_id", edgeID)).first().get("source");
+							
+							
+							@SuppressWarnings("unchecked")
+							ArrayList<String> secondInEdgeIDs=(ArrayList<String>) this.md.getCollection("vertex").find(Filters.eq("_id", inVertexID)).first().get("inEdgeIDs");
+							
+							
+							if(secondInEdgeIDs.isEmpty()) {
+								//System.out.println("not has in edge");
+							}
+							else {
+								for(String secondID:secondInEdgeIDs) {
+									
+									Document secondEdgeDoc=this.md.getCollection("edge").find(Filters.eq("_id", secondID)).first();
+									
+									for(String label:labels) {
+										
+										if(secondEdgeDoc.get("label").equals(label)) {
+											
+
+											MyPersistentEdge edge=new MyPersistentEdge((String)secondEdgeDoc.get("_id"),(String)secondEdgeDoc.get("label"),md);
+											edges.add(edge);
+										}
+										
+										
+									}
+									
+									
+								}
+								
+								
+								
+							}
+
+														
+						}
+						for(Edge edge:edges){
+							
+							vertecies.add(edge.getVertex(Direction.IN));
+							
+						}
+						
+						
+					}
+				}
+				else if(direction==Direction.OUT) {
+					@SuppressWarnings("unchecked")
+					ArrayList<String> outEdgeIDs=(ArrayList<String>) this.md.getCollection("vertex").find(Filters.eq("_id", id)).first().get("outEdgeIDs");
+					
+					
+					if(outEdgeIDs.isEmpty()) {
+						//System.out.println("not has out edge");
+					}
+					else {
+						for(String edgeID:outEdgeIDs) {
+							
+							String outVertexID=(String) this.md.getCollection("edge").find(Filters.eq("_id", edgeID)).first().get("target");
+							
+							@SuppressWarnings("unchecked")
+							ArrayList<String> secondOutEdgeIDs=(ArrayList<String>) this.md.getCollection("vertex").find(Filters.eq("_id", outVertexID)).first().get("outEdgeIDs");
+							
+							if(secondOutEdgeIDs.isEmpty()) {
+								//System.out.println("not has out edge");
+							}
+							else {
+								for(String secondID:secondOutEdgeIDs) {
+									
+									Document secondEdgeDoc=this.md.getCollection("edge").find(Filters.eq("_id", secondID)).first();
+									
+									for(String label:labels) {
+										
+										if(secondEdgeDoc.get("label").equals(label)) {
+											
+
+											MyPersistentEdge edge=new MyPersistentEdge((String)secondEdgeDoc.get("_id"),(String)secondEdgeDoc.get("label"),md);
+											edges.add(edge);
+										}
+										
+										
+									}
+									
+									
+								}
+								
+							}
+							
+							
+							
+							
+							
+							
+						}
+						for(Edge edge:edges){
+							
+							vertecies.add(edge.getVertex(Direction.OUT));
+							
+						}
+						
+						
+					}
+					
+				}
+				else {//both
+					@SuppressWarnings("unchecked")
+					ArrayList<String> inEdgeIDs=(ArrayList<String>) this.md.getCollection("vertex").find(Filters.eq("_id", id)).first().get("inEdgeIDs");
+					
+					@SuppressWarnings("unchecked")
+					ArrayList<String> outEdgeIDs=(ArrayList<String>) this.md.getCollection("vertex").find(Filters.eq("_id", id)).first().get("outEdgeIDs");
+					
+					
+					if(inEdgeIDs.isEmpty()) {
+						//System.out.println("not has in edge");
+					}
+					else {
+						for(String edgeID:inEdgeIDs) {
+							
+							String inVertexID=(String) this.md.getCollection("edge").find(Filters.eq("_id", edgeID)).first().get("source");
+							
+							@SuppressWarnings("unchecked")
+							ArrayList<String> secondInEdgeIDs=(ArrayList<String>) this.md.getCollection("vertex").find(Filters.eq("_id", inVertexID)).first().get("inEdgeIDs");
+							
+							if(secondInEdgeIDs.isEmpty()) {
+								//System.out.println("not has in edge");
+							}
+							else {
+								for(String secondID:secondInEdgeIDs) {
+									
+									Document secondEdgeDoc=this.md.getCollection("edge").find(Filters.eq("_id", secondID)).first();
+									
+									for(String label:labels) {
+										
+										if(secondEdgeDoc.get("label").equals(label)) {
+											
+
+											MyPersistentEdge edge=new MyPersistentEdge((String)secondEdgeDoc.get("_id"),(String)secondEdgeDoc.get("label"),md);
+											edges.add(edge);
+										}
+										
+										
+									}
+									
+									
+								}
+								
+							}
+							
+
+							
+						}
+						for(Edge edge:edges){
+							
+							vertecies.add(edge.getVertex(Direction.IN));
+							
+						}
+						
+						
+					}
+					
+					edges=new ArrayList<Edge>();
+				
+					
+					if(outEdgeIDs.isEmpty()) {
+						//System.out.println("not has out edge");
+					}
+					else {
+						for(String edgeID:outEdgeIDs) {
+
+							String outVertexID=(String) this.md.getCollection("edge").find(Filters.eq("_id", edgeID)).first().get("target");
+							@SuppressWarnings("unchecked")
+							ArrayList<String> secondOutEdgeIDs=(ArrayList<String>) this.md.getCollection("vertex").find(Filters.eq("_id", outVertexID)).first().get("outEdgeIDs");
+							
+							if(secondOutEdgeIDs.isEmpty()) {
+								//System.out.println("not has out edge");
+							}
+							{
+								for(String secondID:secondOutEdgeIDs) {
+									
+									Document secondEdgeDoc=this.md.getCollection("edge").find(Filters.eq("_id", secondID)).first();
+									
+									for(String label:labels) {
+										
+										if(secondEdgeDoc.get("label").equals(label)) {
+											
+
+											MyPersistentEdge edge=new MyPersistentEdge((String)secondEdgeDoc.get("_id"),(String)secondEdgeDoc.get("label"),md);
+											edges.add(edge);
+										}
+										
+										
+									}
+									
+									
+								}
+								
+							}
+							
+
+						}
+						for(Edge edge:edges){
+							
+							vertecies.add(edge.getVertex(Direction.OUT));
+							
+						}
+						
+						
+					}
+					
+					
+					
+					
+					
+					
+				}
+				
+				
+				
+				
+				
+			}
+			else { //label 없을 경우
+				
+				if(direction==Direction.IN) {
+					
+					@SuppressWarnings("unchecked")
+					ArrayList<String> inEdgeIDs=(ArrayList<String>) this.md.getCollection("vertex").find(Filters.eq("_id", id)).first().get("inEdgeIDs");
+					
+					
+					if(inEdgeIDs.isEmpty()) {
+						//System.out.println("not has in edge");
+					}
+					else {
+						for(String edgeID:inEdgeIDs) {
+
+							
+							String inVertexID=(String) this.md.getCollection("edge").find(Filters.eq("_id", edgeID)).first().get("source");
+							
+							@SuppressWarnings("unchecked")
+							ArrayList<String> secondInEdgeIDs=(ArrayList<String>) this.md.getCollection("vertex").find(Filters.eq("_id", inVertexID)).first().get("inEdgeIDs");
+							
+							if(secondInEdgeIDs.isEmpty()) {
+								//System.out.println("not has in edge");
+							}
+							else {
+								for(String secondID:secondInEdgeIDs) {
+									
+									Document secondEdgeDoc=this.md.getCollection("edge").find(Filters.eq("_id", secondID)).first();
+									
+									
+									MyPersistentEdge edge=new MyPersistentEdge((String)secondEdgeDoc.get("_id"),(String)secondEdgeDoc.get("label"),md);
+									edges.add(edge);
+										
+									
+									
+								}
+							}
+
+							
+						}
+						
+						for(Edge edge:edges){
+							
+							vertecies.add(edge.getVertex(Direction.IN));
+							
+						}
+					}
+					
+					
+					
+					
+					
+				}
+				else if(direction==Direction.OUT) {
+					
+					@SuppressWarnings("unchecked")
+					ArrayList<String> outEdgeIDs=(ArrayList<String>) this.md.getCollection("vertex").find(Filters.eq("_id", id)).first().get("outEdgeIDs");
+					
+					
+					if(outEdgeIDs.isEmpty()) {
+						//System.out.println("not has out edge");
+					}
+					else {
+						for(String edgeID:outEdgeIDs) {
+
+							
+							
+							
+							String outVertexID=(String) this.md.getCollection("edge").find(Filters.eq("_id", edgeID)).first().get("target");
+							
+							
+							@SuppressWarnings("unchecked")
+							ArrayList<String> secondOutEdgeIDs=(ArrayList<String>) this.md.getCollection("vertex").find(Filters.eq("_id", outVertexID)).first().get("outEdgeIDs");
+							
+							if(secondOutEdgeIDs.isEmpty()) {
+								
+								//System.out.println("not has out edge");
+								
+							}
+							else {
+								for(String secondID:secondOutEdgeIDs) {
+									
+									Document secondEdgeDoc=this.md.getCollection("edge").find(Filters.eq("_id", secondID)).first();
+									
+									
+									MyPersistentEdge edge=new MyPersistentEdge((String)secondEdgeDoc.get("_id"),(String)secondEdgeDoc.get("label"),md);
+									edges.add(edge);
+										
+								}
+							}
+
+						}
+						
+						for(Edge edge:edges){
+							
+							vertecies.add(edge.getVertex(Direction.OUT));
+							
+						}
+					}
+					
+					
+					
+					
+				}
+				else {
+					
+					
+					
+					@SuppressWarnings("unchecked")
+					ArrayList<String> inEdgeIDs=(ArrayList<String>) this.md.getCollection("vertex").find(Filters.eq("_id", id)).first().get("inEdgeIDs");
+					
+					@SuppressWarnings("unchecked")
+					ArrayList<String> outEdgeIDs=(ArrayList<String>) this.md.getCollection("vertex").find(Filters.eq("_id", id)).first().get("outEdgeIDs");
+					
+					
+					if(inEdgeIDs.isEmpty()) {
+						//System.out.println("not has in edge");
+					}
+					else {
+						for(String edgeID:inEdgeIDs) {
+
+							String inVertexID=(String) this.md.getCollection("edge").find(Filters.eq("_id", edgeID)).first().get("source");
+							
+							@SuppressWarnings("unchecked")
+							ArrayList<String> secondInEdgeIDs=(ArrayList<String>) this.md.getCollection("vertex").find(Filters.eq("_id", inVertexID)).first().get("inEdgeIDs");
+							
+							
+							if(secondInEdgeIDs.isEmpty()) {
+								//System.out.println("not has in edge");
+							}
+							{
+								for(String secondID:secondInEdgeIDs) {
+									
+									Document secondEdgeDoc=this.md.getCollection("edge").find(Filters.eq("_id", secondID)).first();
+									
+									
+									MyPersistentEdge edge=new MyPersistentEdge((String)secondEdgeDoc.get("_id"),(String)secondEdgeDoc.get("label"),md);
+									edges.add(edge);
+										
+									
+									
+								}
+							}
+							
+							
+							
+							
+							
+							
+						}
+						
+						for(Edge edge:edges){
+							
+							vertecies.add(edge.getVertex(Direction.IN));
+							
+						}
+					}
+					
+					edges=new ArrayList<Edge>();
+				
+					
+					if(outEdgeIDs.isEmpty()) {
+						//System.out.println("not has out edge");
+					}
+					else {
+						for(String edgeID:outEdgeIDs) {
+
+							
+							String outVertexID=(String) this.md.getCollection("edge").find(Filters.eq("_id", edgeID)).first().get("target");
+							
+							@SuppressWarnings("unchecked")
+							ArrayList<String> secondOutEdgeIDs=(ArrayList<String>) this.md.getCollection("vertex").find(Filters.eq("_id", outVertexID)).first().get("outEdgeIDs");
+							
+							if(secondOutEdgeIDs.isEmpty()) {
+								//System.out.println("not has out edge");
+							}
+							else {
+								
+								for(String secondID:secondOutEdgeIDs) {
+									
+									Document secondEdgeDoc=this.md.getCollection("edge").find(Filters.eq("_id", secondID)).first();
+									
+									
+									MyPersistentEdge edge=new MyPersistentEdge((String)secondEdgeDoc.get("_id"),(String)secondEdgeDoc.get("label"),md);
+									edges.add(edge);
+										
+									
+									
+								}
+							}
+							
+							
+							
+							
+							
+							
+						}
+						
+						for(Edge edge:edges){
+							
+							vertecies.add(edge.getVertex(Direction.OUT));
+							
+						}
+					}
+					
+
+					
+					
+				}
+				
+
+				
+				
+			}
+			
+
+			
+			
+			return vertecies;
+		}
+		else {
+			
+			throw new IllegalArgumentException("no exist vertex id");
+		}
+		
+					
+				
+				
+					
 	}
+
 
 	@Override
 	public Collection<Vertex> getVertices(Direction direction, String key, Object value, String... labels)
@@ -496,34 +1056,39 @@ public class MyPersistentVertex implements Vertex{
 					@SuppressWarnings("unchecked")
 					ArrayList<String> inEdgeIDs=(ArrayList<String>) this.md.getCollection("vertex").find(Filters.eq("_id", id)).first().get("inEdgeIDs");
 					
-					
-					
-					
-					for(String edgeID:inEdgeIDs) {
-						
-						Document edgeDoc=this.md.getCollection("edge").find(Filters.eq("_id", edgeID)).first();
-						
-						Document propertyDoc=(Document) this.md.getCollection("edge").find(Filters.eq("_id", edgeID)).first().get("property");
-						
-						
-						for(String label:labels) {
+					if(inEdgeIDs.isEmpty()) {
+						//System.out.println("not has in edge");
+					}
+					else {
+						for(String edgeID:inEdgeIDs) {
 							
-							if(edgeDoc.get("label").equals(label)&&propertyDoc.get(key).equals(value)) {
+							Document edgeDoc=this.md.getCollection("edge").find(Filters.eq("_id", edgeID)).first();
+							
+							Document propertyDoc=(Document) this.md.getCollection("edge").find(Filters.eq("_id", edgeID)).first().get("property");
+							
+							
+							for(String label:labels) {
 								
+								if(edgeDoc.get("label").equals(label)&&propertyDoc.get(key).equals(value)) {
+									
 
-								MyPersistentEdge edge=new MyPersistentEdge((String)edgeDoc.get("_id"),(String)edgeDoc.get("label"),new MyPersistentVertex((String)edgeDoc.get("source")),new MyPersistentVertex((String)edgeDoc.get("target")));
-								edges.add(edge);
+									MyPersistentEdge edge=new MyPersistentEdge((String)edgeDoc.get("_id"),(String)edgeDoc.get("label"),md);
+									edges.add(edge);
+								}
+								
+								
 							}
+						}
+						
+						for(Edge edge:edges){
 							
+							vertecies.add(edge.getVertex(Direction.IN));
 							
 						}
 					}
 					
-					for(Edge edge:edges){
-						
-						vertecies.add(edge.getVertex(Direction.IN));
-						
-					}
+					
+					
 					
 					
 				}
@@ -531,29 +1096,36 @@ public class MyPersistentVertex implements Vertex{
 					@SuppressWarnings("unchecked")
 					ArrayList<String> outEdgeIDs=(ArrayList<String>) this.md.getCollection("vertex").find(Filters.eq("_id", id)).first().get("outEdgeIDs");
 					
-					for(String edgeID:outEdgeIDs) {
-						
-						Document edgeDoc=this.md.getCollection("edge").find(Filters.eq("_id", edgeID)).first();
-						Document propertyDoc=(Document) this.md.getCollection("edge").find(Filters.eq("_id", edgeID)).first().get("property");
-						
-						for(String label:labels) {
+					if(outEdgeIDs.isEmpty()) {
+						//System.out.println("not has out edge");
+					}
+					else {
+						for(String edgeID:outEdgeIDs) {
 							
-							if(edgeDoc.get("label").equals(label)&&propertyDoc.get(key).equals(value)) {
+							Document edgeDoc=this.md.getCollection("edge").find(Filters.eq("_id", edgeID)).first();
+							Document propertyDoc=(Document) this.md.getCollection("edge").find(Filters.eq("_id", edgeID)).first().get("property");
+							
+							for(String label:labels) {
 								
+								if(edgeDoc.get("label").equals(label)&&propertyDoc.get(key).equals(value)) {
+									
 
-								MyPersistentEdge edge=new MyPersistentEdge((String)edgeDoc.get("_id"),(String)edgeDoc.get("label"),new MyPersistentVertex((String)edgeDoc.get("source")),new MyPersistentVertex((String)edgeDoc.get("target")));
-								edges.add(edge);
+									MyPersistentEdge edge=new MyPersistentEdge((String)edgeDoc.get("_id"),(String)edgeDoc.get("label"),md);
+									edges.add(edge);
+								}
+								
+								
 							}
+						}
+						
+						for(Edge edge:edges){
 							
+							vertecies.add(edge.getVertex(Direction.OUT));
 							
 						}
 					}
 					
-					for(Edge edge:edges){
-						
-						vertecies.add(edge.getVertex(Direction.OUT));
-						
-					}
+					
 				}
 				else { //both
 					@SuppressWarnings("unchecked")
@@ -563,49 +1135,57 @@ public class MyPersistentVertex implements Vertex{
 					ArrayList<String> outEdgeIDs=(ArrayList<String>) this.md.getCollection("vertex").find(Filters.eq("_id", id)).first().get("outEdgeIDs");
 					
 					
-					
-					
-					
-					for(String edgeID:inEdgeIDs) {
-						
-						Document edgeDoc=this.md.getCollection("edge").find(Filters.eq("_id", edgeID)).first();
-						Document propertyDoc=(Document) this.md.getCollection("edge").find(Filters.eq("_id", edgeID)).first().get("property");
-						
-						for(String label:labels) {
+					if(inEdgeIDs.isEmpty()) {
+						//System.out.println("not has in edge");
+					}
+					else {
+						for(String edgeID:inEdgeIDs) {
 							
-							if(edgeDoc.get("label").equals(label)&&propertyDoc.get(key).equals(value)) {
+							Document edgeDoc=this.md.getCollection("edge").find(Filters.eq("_id", edgeID)).first();
+							Document propertyDoc=(Document) this.md.getCollection("edge").find(Filters.eq("_id", edgeID)).first().get("property");
+							
+							for(String label:labels) {
 								
+								if(edgeDoc.get("label").equals(label)&&propertyDoc.get(key).equals(value)) {
+									
 
-								MyPersistentEdge edge=new MyPersistentEdge((String)edgeDoc.get("_id"),(String)edgeDoc.get("label"),new MyPersistentVertex((String)edgeDoc.get("source")),new MyPersistentVertex((String)edgeDoc.get("target")));
-								vertecies.add(edge.getVertex(Direction.IN));
+									MyPersistentEdge edge=new MyPersistentEdge((String)edgeDoc.get("_id"),(String)edgeDoc.get("label"),md);
+									vertecies.add(edge.getVertex(Direction.IN));
+								}
+								
+								
 							}
 							
 							
 						}
-						
-						
 					}
 					
-					for(String edgeID:outEdgeIDs) {
-						
-						Document edgeDoc=this.md.getCollection("edge").find(Filters.eq("_id", edgeID)).first();
-						Document propertyDoc=(Document) this.md.getCollection("edge").find(Filters.eq("_id", edgeID)).first().get("property");
-						
-						for(String label:labels) {
+					if(outEdgeIDs.isEmpty()) {
+						//System.out.println("not has out edge");
+					}
+					else {
+						for(String edgeID:outEdgeIDs) {
 							
-							if(edgeDoc.get("label").equals(label)&&propertyDoc.get(key).equals(value)) {
+							Document edgeDoc=this.md.getCollection("edge").find(Filters.eq("_id", edgeID)).first();
+							Document propertyDoc=(Document) this.md.getCollection("edge").find(Filters.eq("_id", edgeID)).first().get("property");
+							
+							for(String label:labels) {
 								
+								if(edgeDoc.get("label").equals(label)&&propertyDoc.get(key).equals(value)) {
+									
 
-								MyPersistentEdge edge=new MyPersistentEdge((String)edgeDoc.get("_id"),(String)edgeDoc.get("label"),new MyPersistentVertex((String)edgeDoc.get("source")),new MyPersistentVertex((String)edgeDoc.get("target")));
-								vertecies.add(edge.getVertex(Direction.OUT));
+									MyPersistentEdge edge=new MyPersistentEdge((String)edgeDoc.get("_id"),(String)edgeDoc.get("label"),md);
+									vertecies.add(edge.getVertex(Direction.OUT));
+								}
+								
+								
 							}
 							
 							
 						}
-						
-						
 					}
 					
+
 					
 				}
 				
@@ -621,24 +1201,31 @@ public class MyPersistentVertex implements Vertex{
 					@SuppressWarnings("unchecked")
 					ArrayList<String> inEdgeIDs=(ArrayList<String>) this.md.getCollection("vertex").find(Filters.eq("_id", id)).first().get("inEdgeIDs");
 					
-					for(String edgeID:inEdgeIDs) {
-						
-						Document edgeDoc=this.md.getCollection("edge").find(Filters.eq("_id", edgeID)).first();
-						Document propertyDoc=(Document) this.md.getCollection("edge").find(Filters.eq("_id", edgeID)).first().get("property");
-						
-						if(propertyDoc.get(key).equals(value)) {
-							MyPersistentEdge edge=new MyPersistentEdge((String)edgeDoc.get("_id"),(String)edgeDoc.get("label"),new MyPersistentVertex((String)edgeDoc.get("source")),new MyPersistentVertex((String)edgeDoc.get("target")));
-							edges.add(edge);
+					if(inEdgeIDs.isEmpty()) {
+						//System.out.println("not has in edge");
+					}
+					else {
+						for(String edgeID:inEdgeIDs) {
+							
+							Document edgeDoc=this.md.getCollection("edge").find(Filters.eq("_id", edgeID)).first();
+							Document propertyDoc=(Document) this.md.getCollection("edge").find(Filters.eq("_id", edgeID)).first().get("property");
+							
+							if(propertyDoc.get(key).equals(value)) {
+								MyPersistentEdge edge=new MyPersistentEdge((String)edgeDoc.get("_id"),(String)edgeDoc.get("label"),md);
+								edges.add(edge);
+							}
+							
+
 						}
 						
-
+						for(Edge edge:edges){
+							
+							vertecies.add(edge.getVertex(Direction.IN));
+							
+						}
 					}
 					
-					for(Edge edge:edges){
-						
-						vertecies.add(edge.getVertex(Direction.IN));
-						
-					}
+					
 					
 					
 				}
@@ -646,26 +1233,33 @@ public class MyPersistentVertex implements Vertex{
 					@SuppressWarnings("unchecked")
 					ArrayList<String> outEdgeIDs=(ArrayList<String>) this.md.getCollection("vertex").find(Filters.eq("_id", id)).first().get("outEdgeIDs");
 					
-					for(String edgeID:outEdgeIDs) {
-						
-						Document edgeDoc=this.md.getCollection("edge").find(Filters.eq("_id", edgeID)).first();
-						
+					if(outEdgeIDs.isEmpty()) {
+						//System.out.println("not has out edge");
+					}
+					else {
+						for(String edgeID:outEdgeIDs) {
+							
+							Document edgeDoc=this.md.getCollection("edge").find(Filters.eq("_id", edgeID)).first();
+							
 
-						Document propertyDoc=(Document) this.md.getCollection("edge").find(Filters.eq("_id", edgeID)).first().get("property");
-						
-						if(propertyDoc.get(key).equals(value)) {
-							MyPersistentEdge edge=new MyPersistentEdge((String)edgeDoc.get("_id"),(String)edgeDoc.get("label"),new MyPersistentVertex((String)edgeDoc.get("source")),new MyPersistentVertex((String)edgeDoc.get("target")));
-							edges.add(edge);
+							Document propertyDoc=(Document) this.md.getCollection("edge").find(Filters.eq("_id", edgeID)).first().get("property");
+							
+							if(propertyDoc.get(key).equals(value)) {
+								MyPersistentEdge edge=new MyPersistentEdge((String)edgeDoc.get("_id"),(String)edgeDoc.get("label"),md);
+								edges.add(edge);
+							}
+
 						}
-
+						
+						
+						for(Edge edge:edges){
+							
+							vertecies.add(edge.getVertex(Direction.OUT));
+							
+						}
 					}
 					
 					
-					for(Edge edge:edges){
-						
-						vertecies.add(edge.getVertex(Direction.OUT));
-						
-					}
 				}
 				else { //both
 					@SuppressWarnings("unchecked")
@@ -674,35 +1268,48 @@ public class MyPersistentVertex implements Vertex{
 					@SuppressWarnings("unchecked")
 					ArrayList<String> outEdgeIDs=(ArrayList<String>) this.md.getCollection("vertex").find(Filters.eq("_id", id)).first().get("outEdgeIDs");
 					
-					for(String edgeID:inEdgeIDs) {
-						
-						Document edgeDoc=this.md.getCollection("edge").find(Filters.eq("_id", edgeID)).first();
-						
-						Document propertyDoc=(Document) this.md.getCollection("edge").find(Filters.eq("_id", edgeID)).first().get("property");
-						
-						if(propertyDoc.get(key).equals(value)) {
-							MyPersistentEdge edge=new MyPersistentEdge((String)edgeDoc.get("_id"),(String)edgeDoc.get("label"),new MyPersistentVertex((String)edgeDoc.get("source")),new MyPersistentVertex((String)edgeDoc.get("target")));
-							edges.add(edge);
-						}
+					
+					if(inEdgeIDs.isEmpty()) {
+						//System.out.println("not has in edge");
+					}
+					else {
+						for(String edgeID:inEdgeIDs) {
 							
+							Document edgeDoc=this.md.getCollection("edge").find(Filters.eq("_id", edgeID)).first();
+							
+							Document propertyDoc=(Document) this.md.getCollection("edge").find(Filters.eq("_id", edgeID)).first().get("property");
+							
+							if(propertyDoc.get(key).equals(value)) {
+								MyPersistentEdge edge=new MyPersistentEdge((String)edgeDoc.get("_id"),(String)edgeDoc.get("label"),md);
+								edges.add(edge);
+							}
+								
 
+						}
 					}
 					
-					for(String edgeID:outEdgeIDs) {
-						
-						Document edgeDoc=this.md.getCollection("edge").find(Filters.eq("_id", edgeID)).first();
-						
-						Document propertyDoc=(Document) this.md.getCollection("edge").find(Filters.eq("_id", edgeID)).first().get("property");
-						
-						if(propertyDoc.get(key).equals(value)) {
-							MyPersistentEdge edge=new MyPersistentEdge((String)edgeDoc.get("_id"),(String)edgeDoc.get("label"),new MyPersistentVertex((String)edgeDoc.get("source")),new MyPersistentVertex((String)edgeDoc.get("target")));
-							edges.add(edge);
-						}
-							
-
-						
-						
+					if(outEdgeIDs.isEmpty()) {
+						//System.out.println("not has out edge");
 					}
+					else {
+						for(String edgeID:outEdgeIDs) {
+							
+							Document edgeDoc=this.md.getCollection("edge").find(Filters.eq("_id", edgeID)).first();
+							
+							Document propertyDoc=(Document) this.md.getCollection("edge").find(Filters.eq("_id", edgeID)).first().get("property");
+							
+							if(propertyDoc.get(key).equals(value)) {
+								MyPersistentEdge edge=new MyPersistentEdge((String)edgeDoc.get("_id"),(String)edgeDoc.get("label"),md);
+								edges.add(edge);
+							}
+								
+
+							
+							
+						}
+					}
+					
+					
 				}
 
 				
@@ -720,6 +1327,14 @@ public class MyPersistentVertex implements Vertex{
 	@Override
 	public void remove() {
 		// TODO Auto-generated method stub
+		if(this.md.getCollection("vertex").find(Filters.eq("_id", this.id)).first()!=null) {
+			
+			this.md.getCollection("vertex").findOneAndDelete(Filters.eq("_id", this.id));
+			
+		}
+		else {
+			throw new IllegalArgumentException("no exist vertex id");
+		}
 		
 	}
 
