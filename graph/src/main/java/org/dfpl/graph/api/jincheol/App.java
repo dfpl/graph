@@ -44,21 +44,29 @@ public class App {
         g.addEdge("d|edge|c", v4, v3, "edge");
         g.addEdge("e|edge|d", v5, v4, "edge");
         
-        Iterable<Vertex> vertices=g.getVertices();
-		for(Vertex v:vertices) {
-			
-			HashMap<String,Integer> distanceMap=ug.dijkstra(v);
-			
-			for(String key:distanceMap.keySet()) {
-				
-				System.out.println((String)v.getId()+" "+key+" "+distanceMap.get(key).toString());
-			}
-			
-			
-			
-		}
+//        Iterable<Vertex> vertices=g.getVertices();
+//		for(Vertex v:vertices) {
+//			
+//			HashMap<String,Integer> distanceMap=ug.dijkstra(v);
+//			
+//			for(String key:distanceMap.keySet()) {
+//				
+//				System.out.println((String)v.getId()+" "+key+" "+distanceMap.get(key).toString());
+//			}
+//			
+//			
+//			
+//		}
 		
 		
+        HashMap<String,Double> cc=ug.closenessCentrality(ug.getVerticesNum());
+		
+		for(String id:cc.keySet())
+			System.out.println(id+" "+cc.get(id).toString());
+		
+		
+        
+        
 	}
 
 }

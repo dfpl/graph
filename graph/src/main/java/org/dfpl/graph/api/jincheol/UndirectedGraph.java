@@ -55,7 +55,7 @@ public class UndirectedGraph {
 	}
 	
 	
-	//최단거리 테이블 반환
+	//해당 시작점에 대한 최단거리 테이블 반환
 	public HashMap<String,Integer> dijkstra(Vertex source) {
 		
 		ArrayList<Vertex> visited=new ArrayList<>();
@@ -129,8 +129,52 @@ public class UndirectedGraph {
 	}
 	
 	
-	public void closenessCentrality() {
+	public HashMap<String,Double> closenessCentrality(int N) {
 		
+		HashMap<String,Double> centrality=new HashMap<>();
+		
+		Iterable<Vertex> vertices=g.getVertices();
+		
+		
+		
+		
+		
+		//centrality 초기화 
+		for(Vertex v:vertices)
+			centrality.put(v.getId().toString(), 0.0);
+
+		
+		for(Vertex v:vertices) {
+			
+			
+			HashMap<String,Integer> sp=this.dijkstra(v);
+			
+			int sum=0;
+			
+			for(String id:sp.keySet()) {
+				
+				if(id==v.getId().toString()) continue;
+				
+				sum+=sp.get(id);
+				
+			}
+			
+			double closenessC=(N-1)/(double)sum;
+			
+			
+			
+			
+			centrality.replace(v.getId().toString(), closenessC);
+			
+		}
+			
+		
+		
+		
+		
+		
+		
+		return centrality;
 		
 	}
 	
