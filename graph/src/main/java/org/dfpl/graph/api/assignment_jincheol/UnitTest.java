@@ -1,4 +1,4 @@
-package org.dfpl.graph.api.assignment;
+package org.dfpl.graph.api.assignment_jincheol;
 
 import org.dfpl.graph.api.memory.InMemoryGraph;
 

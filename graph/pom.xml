@@ -32,7 +32,19 @@
 			<artifactId>json</artifactId>
 			<version>20230227</version>
 		</dependency>
-
+		<!--
+		https://mvnrepository.com/artifact/com.tinkerpop.blueprints/blueprints-core -->
+		<dependency>
+			<groupId>com.tinkerpop.blueprints</groupId>
+			<artifactId>blueprints-core</artifactId>
+			<version>2.6.0</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.mongodb/mongo-java-driver -->
+		<dependency>
+			<groupId>org.mongodb</groupId>
+			<artifactId>mongo-java-driver</artifactId>
+			<version>3.12.13</version>
+		</dependency>
 	</dependencies>
 	<build>
 		<pluginManagement>

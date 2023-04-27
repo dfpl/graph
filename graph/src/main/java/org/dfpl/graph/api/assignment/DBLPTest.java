@@ -18,6 +18,8 @@ class Closeness_Centrality{
 	public int id;
 	public double Cc;
 }
+
+@SuppressWarnings("resource")
 public class DBLPTest {
 	
 	/*
@@ -132,6 +134,8 @@ public class DBLPTest {
 	}
 	*/
 	
+	
+	@SuppressWarnings("unused")
 	public static void main(String[] args) throws Exception {
 		
 			Graph g = new InMemoryGraph();
