@@ -1,6 +1,7 @@
 package org.dfpl.graph.api.assignment;
 
 import org.dfpl.graph.api.memory.InMemoryGraph;
+import org.dfpl.graph.api.persistent.mariadb.bsjoe.MGraph;
 
 import com.tinkerpop.blueprints.revised.Direction;
 import com.tinkerpop.blueprints.revised.Edge;
@@ -12,10 +13,10 @@ public class UnitTest {
 	public static void main(String[] args) throws Exception {
 		String dbID = "root";
 		String dbPW = "1234";
-		String dbName = "team?";
+		String dbName = "mygraph";
 
-		Graph g = new InMemoryGraph();
-		// Graph g = new PersistentGraph(dbID, dbPW, dbName);
+		// Graph g = new InMemoryGraph();
+		Graph g = new MGraph(dbID, dbPW, dbName);
 
 		Vertex v1 = g.addVertex("1");
 		System.out.println("[1] " + v1.getId());
@@ -31,11 +32,11 @@ public class UnitTest {
 		System.out.println("[6] " + g.getVertex("2"));
 		Vertex v2 = g.addVertex("2");
 		System.out.println("[7] " + g.getVertices().size());
-		v1.setProperty("k1", "v1");
+		v1.setProperty("k1", "v1");	
 		v1.setProperty("k2", true);
 		v1.setProperty("k3", 3);
 		v1.setProperty("k4", 4.5);
-		System.out.println("[8] " + v1.getPropertyKeys().size());
+		System.out.println("[8] " + v1.getPropertyKeys());
 		System.out.println("[9] " + (v1.getProperty("k0") == null));
 		System.out.println("[10] " + v1.getProperty("k1").equals("v2"));
 		System.out.println("[11] " + ((boolean) v1.getProperty("k2") == true));
@@ -71,7 +72,7 @@ public class UnitTest {
 		System.out.println("[25] " + ((int) e1l2.getProperty("k3") == 3));
 		System.out.println("[26] " + ((double) e1l2.getProperty("k4") == 4));
 		System.out.println("[27] " + g.getEdges("k1", "v1").size());
-
+		
 		Vertex a = g.addVertex("a");
 		Vertex b = g.addVertex("b");
 		Vertex c = g.addVertex("c");
@@ -82,6 +83,8 @@ public class UnitTest {
 		Edge ac = g.addEdge(a, c, "l");
 		Edge da = g.addEdge(d, a, "l");
 		Edge ea = g.addEdge(e, a, "l");
+		
+
 
 		System.out.println("[28] " + a.getEdges(Direction.OUT).contains(ab));
 		System.out.println("[29] " + a.getEdges(Direction.OUT).contains(ac));
