@@ -1,7 +1,6 @@
-package org.dfpl.graph.api.assignment;
+package org.dfpl.graph.api.assignment_jincheol;
 
 import org.dfpl.graph.api.jincheol.MyGraphInMemory;
-import org.dfpl.graph.api.memory.InMemoryGraph;
 
 import com.tinkerpop.blueprints.revised.Direction;
 import com.tinkerpop.blueprints.revised.Edge;

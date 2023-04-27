@@ -3,7 +3,6 @@ package org.dfpl.graph.api.assignment;
 import java.io.BufferedReader;
 import java.io.FileReader;
 
-import org.dfpl.graph.api.memory.InMemoryGraph;
 import org.dfpl.graph.api.persistent.mariadb.bsjoe.MGraph;
 
 import com.tinkerpop.blueprints.revised.Direction;
@@ -19,7 +18,6 @@ public class SmallDataTest {
     public static String subTag = "sub";
     public static String divTag = "div";
 
-    @SuppressWarnings("unused")
 	public static void main(String[] args) throws Exception {
 
         // 참고: 평가를 위한 데이터셋은 보다 작은 데이터셋을 활용 (예: CollegeMsg.txt, http://snap.stanford.edu/data/index.html)

@@ -1,6 +1,5 @@
 package org.dfpl.graph.api.assignment;
 
-import org.dfpl.graph.api.memory.InMemoryGraph;
 import org.dfpl.graph.api.persistent.mariadb.bsjoe.MGraph;
 
 import com.tinkerpop.blueprints.revised.Direction;
@@ -9,7 +8,6 @@ import com.tinkerpop.blueprints.revised.Graph;
 import com.tinkerpop.blueprints.revised.Vertex;
 
 public class UnitTest {
-	@SuppressWarnings("unused")
 	public static void main(String[] args) throws Exception {
 		String dbID = "root";
 		String dbPW = "1234";
