@@ -1,4 +1,4 @@
-package org.dfpl.graph.api.jincheol;
+package org.dfpl.graph.blueprints.impl.m10366;
 
 
 import java.util.ArrayList;

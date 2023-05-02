@@ -1,21 +1,20 @@
-package org.dfpl.graph.api.assignment;
-
-import org.dfpl.graph.api.memory.InMemoryGraph;
+package org.dfpl.graph.blueprints.impl.m10366;
 
 import com.tinkerpop.blueprints.revised.Direction;
 import com.tinkerpop.blueprints.revised.Edge;
 import com.tinkerpop.blueprints.revised.Graph;
 import com.tinkerpop.blueprints.revised.Vertex;
 
-public class UnitTest {
+public class UnitTestJincheol {
 	@SuppressWarnings("unused")
 	public static void main(String[] args) throws Exception {
 		String dbID = "root";
 		String dbPW = "1234";
-		String dbName = "mygraph";
+		String dbName = "team?";
 
-		Graph g = new InMemoryGraph();
-		// Graph g = new MyPersistentGraph();
+		//Graph g = new InMemoryGraph();
+		// Graph g = new PersistentGraph(dbID, dbPW, dbName);
+		Graph g = new MyGraphInMemory();
 
 		Vertex v1 = g.addVertex("1");
 		System.out.println("[1] " + v1.getId());
@@ -35,7 +34,7 @@ public class UnitTest {
 		v1.setProperty("k2", true);
 		v1.setProperty("k3", 3);
 		v1.setProperty("k4", 4.5);
-		System.out.println("[8] " + v1.getPropertyKeys());
+		System.out.println("[8] " + v1.getPropertyKeys().size());
 		System.out.println("[9] " + (v1.getProperty("k0") == null));
 		System.out.println("[10] " + v1.getProperty("k1").equals("v2"));
 		System.out.println("[11] " + ((boolean) v1.getProperty("k2") == true));

@@ -1,22 +1,19 @@
-package org.dfpl.graph.api.assignment_jincheol;
-
-import org.dfpl.graph.api.jincheol.MyGraphInMemory;
+package org.dfpl.graph.blueprints.impl.m10621;
 
 import com.tinkerpop.blueprints.revised.Direction;
 import com.tinkerpop.blueprints.revised.Edge;
 import com.tinkerpop.blueprints.revised.Graph;
 import com.tinkerpop.blueprints.revised.Vertex;
 
-public class UnitTestJincheol {
+public class UnitTest {
 	@SuppressWarnings("unused")
 	public static void main(String[] args) throws Exception {
 		String dbID = "root";
 		String dbPW = "1234";
 		String dbName = "team?";
 
-		//Graph g = new InMemoryGraph();
-		// Graph g = new PersistentGraph(dbID, dbPW, dbName);
-		Graph g = new MyGraphInMemory();
+		// Graph g = new InMemoryGraph();
+		Graph g = new MGraph("root", "1234", "my");
 
 		Vertex v1 = g.addVertex("1");
 		System.out.println("[1] " + v1.getId());
@@ -29,6 +26,7 @@ public class UnitTestJincheol {
 		} catch (IllegalArgumentException e) {
 			System.out.println("[5] " + e.getMessage());
 		}
+
 		System.out.println("[6] " + g.getVertex("2"));
 		Vertex v2 = g.addVertex("2");
 		System.out.println("[7] " + g.getVertices().size());

@@ -1,9 +1,7 @@
-package org.dfpl.graph.api.assignment_jincheol;
+package org.dfpl.graph.blueprints.impl.m10366;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
-
-import org.dfpl.graph.api.jincheol.MyPersistentGraph;
 
 import com.tinkerpop.blueprints.revised.Direction;
 import com.tinkerpop.blueprints.revised.Edge;

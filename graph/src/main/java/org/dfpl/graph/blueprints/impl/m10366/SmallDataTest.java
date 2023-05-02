@@ -1,4 +1,4 @@
-package org.dfpl.graph.api.assignment_jincheol;
+package org.dfpl.graph.blueprints.impl.m10366;
 
 import java.io.BufferedReader;
 import java.io.FileReader;

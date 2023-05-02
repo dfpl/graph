@@ -1,4 +1,4 @@
-package org.dfpl.graph.api.persistent.mariadb.bsjoe;
+package org.dfpl.graph.blueprints.impl.m10621;
 
 import java.sql.ResultSet;
 import java.util.Collection;

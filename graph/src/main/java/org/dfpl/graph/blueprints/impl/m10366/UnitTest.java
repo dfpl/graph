@@ -1,6 +1,4 @@
-package org.dfpl.graph.api.assignment_jincheol;
-
-import org.dfpl.graph.api.memory.InMemoryGraph;
+package org.dfpl.graph.blueprints.impl.m10366;
 
 import com.tinkerpop.blueprints.revised.Direction;
 import com.tinkerpop.blueprints.revised.Edge;
@@ -14,20 +12,24 @@ public class UnitTest {
 		String dbPW = "1234";
 		String dbName = "team?";
 
-		Graph g = new InMemoryGraph();
-		// Graph g = new PersistentGraph(dbID, dbPW, dbName);
+		// Graph g = new InMemoryGraph();
+		// TODO: connection string 등은 최대한 일반화 시키는게 좋을 듯합니다.
+		Graph g = new MyPersistentGraph();
 
 		Vertex v1 = g.addVertex("1");
 		System.out.println("[1] " + v1.getId());
 		v1 = g.addVertex("1");
 		System.out.println("[2] " + v1.getId());
 		System.out.println("[3] " + g.getVertices().size());
+		// TODO: 오류납니다.
 		System.out.println("[4] " + g.getVertex("1").getId());
 		try {
+			// TODO: 오류를 throw 못시키고 있습니다...
 			g.addVertex("a|b");
 		} catch (IllegalArgumentException e) {
 			System.out.println("[5] " + e.getMessage());
 		}
+		// TODO: 전반적으로 구현을 다시하셔야 될 듯합니다.
 		System.out.println("[6] " + g.getVertex("2"));
 		Vertex v2 = g.addVertex("2");
 		System.out.println("[7] " + g.getVertices().size());

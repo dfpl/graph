@@ -1,0 +1,50 @@
+[1] 1
+[2] 1
+[3] 8
+[4] 1
+[5] id cannot contain '|'
+[6] org.dfpl.graph.blueprints.impl.m10621.MVertex@5e3a8624
+[7] 8
+[8] 4
+[9] true
+[10] false
+[11] true
+[12] false
+[13] true
+[14] 1
+[15] 1|l|2
+[16] 8
+[17] inVertex cannot be null
+[18] label cannot contain '|'
+[19] 8
+[20] 8
+[21] 4
+[22] false
+[23] true
+[24] false
+[25] true
+[26] false
+[27] 1
+[28] true
+[29] true
+[30] false
+[31] true
+[32] false
+[33] true
+[34] false
+[35] false
+[36] true
+[37] true
+[38] true
+[39] false
+[40] true
+[41] false
+[42] true
+[43] false
+[44] false
+[45] true
+[46] true
+[47] true
+[48] false
+[49] Direction.BOTH is not allowed
+[50] Direction.BOTH is not allowed

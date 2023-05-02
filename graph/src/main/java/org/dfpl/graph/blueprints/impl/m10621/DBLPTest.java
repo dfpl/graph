@@ -1,4 +1,4 @@
-package org.dfpl.graph.api.assignment;
+package org.dfpl.graph.blueprints.impl.m10621;
 
 import java.io.*;
 import java.io.BufferedReader;
@@ -140,7 +140,7 @@ public class DBLPTest {
 		
 			Graph g = new InMemoryGraph();
 		
-	        String fileName = "C:\\com-dblp.ungraph.txt";
+	        String fileName = "f:\\com-dblp.ungraph.txt";
 	        String delimiter = "\\t";
 
 	        BufferedReader r = new BufferedReader(new FileReader(fileName));	        
