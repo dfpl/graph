@@ -6,7 +6,7 @@ import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import org.dfpl.graph.api.memory.InMemoryGraph;
+import org.dfpl.graph.blueprints.impl.memory.InMemoryGraph;
 
 import com.tinkerpop.blueprints.revised.Direction;
 import com.tinkerpop.blueprints.revised.Edge;

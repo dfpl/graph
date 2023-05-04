@@ -1,6 +1,6 @@
-package org.dfpl.graph.api.assignment;
+package org.dfpl.graph.blueprints.test;
 
-import org.dfpl.graph.api.memory.InMemoryGraph;
+import org.dfpl.graph.blueprints.impl.memory.InMemoryGraph;
 
 import com.tinkerpop.blueprints.revised.Direction;
 import com.tinkerpop.blueprints.revised.Edge;

@@ -1,4 +1,4 @@
-package org.dfpl.graph.api.memory;
+package org.dfpl.graph.blueprints.impl.memory;
 
 import java.util.Collection;
 import java.util.HashMap;
