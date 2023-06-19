@@ -1,9 +1,10 @@
 package org.dfpl.graph.blueprints.impl.m10366.custom;
 
 import com.tinkerpop.blueprints.revised.Direction;
+import com.tinkerpop.blueprints.revised.Element;
 
 
-public interface Edge {
+public interface TimeEdge extends Element{
 	/**
 	 * Return the tail/out or head/in vertex.
 	 *
@@ -11,7 +12,7 @@ public interface Edge {
 	 * @return the tail/out or head/in vertex
 	 * @throws IllegalArgumentException is thrown if a direction of both is provided
 	 */
-	public Vertex getVertex(Direction direction) throws IllegalArgumentException;
+	public TimeVertex getVertex(Direction direction) throws IllegalArgumentException;
 
 	/**
 	 * Return the label associated with the edge.

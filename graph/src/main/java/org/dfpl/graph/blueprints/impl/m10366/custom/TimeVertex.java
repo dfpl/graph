@@ -3,9 +3,10 @@ package org.dfpl.graph.blueprints.impl.m10366.custom;
 import java.util.Collection;
 
 import com.tinkerpop.blueprints.revised.Direction;
+import com.tinkerpop.blueprints.revised.Element;
 
 
-public interface Vertex {
+public interface TimeVertex extends Element{
 
 	/**
 	 * Return the edges incident to the vertex according to the provided direction
@@ -16,7 +17,7 @@ public interface Vertex {
 	 * @return an iterable of incident edges
 	 * @throws IllegalArgumentException is thrown if a direction of both is provided
 	 */
-	public Collection<Edge> getEdges(Direction direction, String... labels) throws IllegalArgumentException;
+	public Collection<TimeEdge> getEdges(Direction direction, String... labels) throws IllegalArgumentException;
 
 	/**
 	 * Return the vertices adjacent to the vertex according to the provided
@@ -28,9 +29,8 @@ public interface Vertex {
 	 * @return an iterable of adjacent vertices
 	 * @throws IllegalArgumentException is thrown if a direction of both is provided
 	 */
-	public Collection<Vertex> getVertices(Direction direction, String... labels) throws IllegalArgumentException;
+	public Collection<TimeVertex> getVertices(Direction direction, String... labels) throws IllegalArgumentException;
 
-	public Collection<Vertex> getTwoHopVertices(Direction direction, String... labels) throws IllegalArgumentException;
 	
 	/**
 	 * Return the vertices adjacent to the vertex according to the provided
@@ -43,7 +43,7 @@ public interface Vertex {
 	 * @return an iterable of adjacent vertices
 	 * @throws IllegalArgumentException is thrown if a direction of both is provided
 	 */
-	public Collection<Vertex> getVertices(Direction direction, String key, Object value, String... labels) throws IllegalArgumentException;
+	public Collection<TimeVertex> getVertices(Direction direction, String key, Object value, String... labels) throws IllegalArgumentException;
 
 	/**
 	 * Remove the element from the graph.

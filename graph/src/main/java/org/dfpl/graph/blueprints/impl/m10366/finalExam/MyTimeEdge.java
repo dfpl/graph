@@ -1,24 +1,27 @@
-package org.dfpl.graph.blueprints.impl.m10366;
+package org.dfpl.graph.blueprints.impl.m10366.finalExam;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
 
-import com.tinkerpop.blueprints.revised.Direction;
-import com.tinkerpop.blueprints.revised.Edge;
-import com.tinkerpop.blueprints.revised.Vertex;
+import org.dfpl.graph.blueprints.impl.m10366.custom.EdgeEvent;
+import org.dfpl.graph.blueprints.impl.m10366.custom.TimeEdge;
+import org.dfpl.graph.blueprints.impl.m10366.custom.TimeVertex;
 
-public class MyEdge implements Edge{
+
+import com.tinkerpop.blueprints.revised.Direction;
+
+public class MyTimeEdge implements TimeEdge{
 	
 	private String id;
 	private String label;
 	private Map<String,Object> property;
-	private Vertex source; //out vertex
-	private Vertex target; //in vertex
+	private TimeVertex source; //out vertex
+	private TimeVertex target; //in vertex
 	
 	
-	public MyEdge(Vertex source,Vertex target,String label) {
+	public MyTimeEdge(TimeVertex source,TimeVertex target,String label) {
 		
 		this.source=source;
 		this.target=target;
@@ -26,7 +29,6 @@ public class MyEdge implements Edge{
 		this.id=source.getId()+"|"+label+"|"+target.getId();
 		this.property=new HashMap<>();
 	}
-	
 	
 	@Override
 	public String getId() {
@@ -59,7 +61,7 @@ public class MyEdge implements Edge{
 	}
 
 	@Override
-	public Vertex getVertex(Direction direction) throws IllegalArgumentException {
+	public TimeVertex getVertex(Direction direction) throws IllegalArgumentException {
 		// TODO Auto-generated method stub
 		
 		if(direction==Direction.IN) return this.target;
@@ -83,8 +85,37 @@ public class MyEdge implements Edge{
 		
 	}
 	
-	
-	
+
+	@Override
+	public EdgeEvent addEvent(long time) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public EdgeEvent pickEvent(long time) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public EdgeEvent removeEvent(long time) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Iterable<EdgeEvent> pickEvents(long time) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Iterable<EdgeEvent> getEdgeEvents(long time) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 	
 
 }
