@@ -21,6 +21,7 @@ public class App {
 		Graph g=new TinkerGraph();
         
         
+		
         
         UndirectedGraph ug=new UndirectedGraph(g); //알고리즘 
 		
