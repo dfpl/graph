@@ -101,6 +101,7 @@ public class MyTimeEdge implements TimeEdge{
 	public EdgeEvent addEvent(long time) {
 		
 		
+		
 		if(this.graph.getEdgeEvents().containsKey(this.id+"|"+String.valueOf(time))) {
 			System.out.println("Already Exist Event");
 			return null;

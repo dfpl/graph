@@ -34,16 +34,26 @@ public class TestApp {
         
         //add events
         EdgeEvent adt5=ad.addEvent(5);
-        EdgeEvent abt10=ad.addEvent(10);
+        EdgeEvent abt10=ab.addEvent(10);
         
+        EdgeEvent bct8=bc.addEvent(8);
+        EdgeEvent bdt12=bd.addEvent(12);
+        EdgeEvent bct16=bc.addEvent(16);
+        
+        EdgeEvent cdt13=cd.addEvent(13);
+        EdgeEvent cet14=ce.addEvent(14);
+        
+//        System.out.println(g.getEdgeEventsToList());
         
         VertexEvent at3=a.addEvent(3);
         
-        System.out.println(g.getVertexEventsToList());
+//        System.out.println(g.getVertexEventsToList());
         
-        System.out.println(at3.getVertexEvents(Direction.IN,TemporalRelation.isAfter , "contact"));
+        System.out.println(at3.getVertexEvents(Direction.OUT,TemporalRelation.isAfter , "contact"));
         
-      
+        
+        VertexEvent c10=c.addEvent(10);
+        System.out.println(c10.getVertexEvents(Direction.OUT,TemporalRelation.isAfter , "contact"));
         
 	}
 

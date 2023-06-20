@@ -74,7 +74,7 @@ public class MyVertexEvent implements VertexEvent{
 		ArrayList<MyEdgeEvent> validEvents=new ArrayList<>();
 		
 		for(MyEdgeEvent event:this.graph.getEdgeEventsToList()) {	
-			if(event.getSourceID()==this.vertexID)
+			if(event.getSourceID()==this.vertexID&&event.getTime()>this.time)
 				validEvents.add(event);
 		}
 		
@@ -133,7 +133,7 @@ public class MyVertexEvent implements VertexEvent{
 				
 				//1. 유효한 event들을 validEvents에 저장
 				for(MyEdgeEvent event:this.graph.getEdgeEventsToList()) {	
-					if(event.getSourceID()==this.vertexID)
+					if(event.getSourceID()==this.vertexID&&event.getTime()>this.time)
 						validEvents.add(event);
 				}
 				
@@ -156,7 +156,7 @@ public class MyVertexEvent implements VertexEvent{
 			else if(d==Direction.IN) {
 				//1. 유효한 event들을 validEvents에 저장
 				for(MyEdgeEvent event:this.graph.getEdgeEventsToList()) {	
-					if(event.getTargetID()==this.vertexID)
+					if(event.getTargetID()==this.vertexID&&event.getTime()>this.time)
 						validEvents.add(event);
 				}
 				
@@ -193,7 +193,7 @@ public class MyVertexEvent implements VertexEvent{
 				//1. label이 일치하고유효한 event들을 validEvents에 저장
 				for(MyEdgeEvent event:this.graph.getEdgeEventsToList()) {
 					for(String label:labels) {
-						if(event.getSourceID()==this.vertexID &&event.getLabel()==label)
+						if(event.getSourceID()==this.vertexID &&event.getLabel()==label&&event.getTime()>this.time)
 							validEvents.add(event);
 					}
 					
@@ -221,7 +221,7 @@ public class MyVertexEvent implements VertexEvent{
 				//1. label이 일치하고유효한 event들을 validEvents에 저장
 				for(MyEdgeEvent event:this.graph.getEdgeEventsToList()) {
 					for(String label:labels) {
-						if(event.getTargetID()==this.vertexID &&event.getLabel()==label)
+						if(event.getTargetID()==this.vertexID &&event.getLabel()==label&&event.getTime()>this.time)
 							validEvents.add(event);
 					}
 					
@@ -274,7 +274,7 @@ public class MyVertexEvent implements VertexEvent{
 				
 				//1. 유효한 event들을 validEvents에 저장
 				for(MyEdgeEvent event:this.graph.getEdgeEventsToList()) {	
-					if(event.getSourceID()==this.vertexID)
+					if(event.getSourceID()==this.vertexID&&event.getTime()>this.time)
 						validEvents.add(event);
 				}
 				
@@ -297,7 +297,7 @@ public class MyVertexEvent implements VertexEvent{
 			else if(d==Direction.IN) {
 				//1. 유효한 event들을 validEvents에 저장
 				for(MyEdgeEvent event:this.graph.getEdgeEventsToList()) {	
-					if(event.getTargetID()==this.vertexID)
+					if(event.getTargetID()==this.vertexID&&event.getTime()>this.time)
 						validEvents.add(event);
 				}
 				
@@ -329,9 +329,10 @@ public class MyVertexEvent implements VertexEvent{
 				//1. 유효한 event들을 validEvents에 저장
 				for(MyEdgeEvent event:this.graph.getEdgeEventsToList()) {
 					for(String label:labels) 
-						if(event.getSourceID()==this.vertexID&&event.getLabel()==label)
+						if(event.getSourceID()==this.vertexID&&event.getLabel()==label&&event.getTime()>this.time)
 							validEvents.add(event);
 				}
+				
 				
 				
 				//2. 저장된 edge event들을 시간순으로 오름차순 정렬 
@@ -353,7 +354,7 @@ public class MyVertexEvent implements VertexEvent{
 				//1. 유효한 event들을 validEvents에 저장
 				for(MyEdgeEvent event:this.graph.getEdgeEventsToList()) {	
 					for(String label:labels) 
-						if(event.getTargetID()==this.vertexID&&event.getLabel()==label)
+						if(event.getTargetID()==this.vertexID&&event.getLabel()==label&&event.getTime()>this.time)
 							validEvents.add(event);
 				}
 				
