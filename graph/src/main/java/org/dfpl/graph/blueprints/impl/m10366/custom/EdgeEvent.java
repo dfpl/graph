@@ -6,7 +6,8 @@ import com.tinkerpop.blueprints.revised.Direction;
 
 public interface EdgeEvent {
 
-	public Iterable<EdgeEvent> getEdgeEvents(TemporalRelation r);
+	
+	
 	
 	public Map<String,Object> getProperties();
 	

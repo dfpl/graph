@@ -8,14 +8,17 @@ import java.util.Set;
 
 
 import org.dfpl.graph.blueprints.impl.m10366.custom.TimeEdge;
+
 import org.dfpl.graph.blueprints.impl.m10366.custom.TimeVertex;
 
 import org.dfpl.graph.blueprints.impl.m10366.custom.VertexEvent;
 
 import com.tinkerpop.blueprints.revised.Direction;
 
+
 public class MyTimeVertex implements TimeVertex{
 	
+	private MyTimeGraph graph;
 	
 	private String id;
 	private Map<String,Object> property;
@@ -23,12 +26,11 @@ public class MyTimeVertex implements TimeVertex{
 	private ArrayList<TimeEdge> outEdges; //outcome edge
 	
 	
-	/**
-	 * set id 
-	 * reset property
-	 * @param id
-	 */
-	public MyTimeVertex(String id) {
+	
+	
+	public MyTimeVertex(MyTimeGraph graph,String id) {
+		
+		this.graph=graph;
 		
 		this.id=id;
 		this.property=new HashMap<>();
@@ -36,96 +38,110 @@ public class MyTimeVertex implements TimeVertex{
 		this.outEdges=new ArrayList<>();
 		
 	}
+	
+	public void addInEdges(TimeEdge inEdge) {
+		this.inEdges.add(inEdge);
+	}
+	
+	public void addOutEdges(TimeEdge outEdge) {
+		this.outEdges.add(outEdge);
+	}
 
 
 	@Override
 	public String getId() {
-		// TODO Auto-generated method stub
+		
 		return this.id;
 	}
 
 
 	@Override
 	public Object getProperty(String key) {
-		// TODO Auto-generated method stub
+		
 		return this.property.get(key);
 	}
 
 
 	@Override
 	public Set<String> getPropertyKeys() {
-		// TODO Auto-generated method stub
+		
 		return this.property.keySet();
 	}
 
 
 	@Override
 	public void setProperty(String key, Object value) {
-		// TODO Auto-generated method stub
+		
 		this.property.put(key, value);
 	}
 
 
 	@Override
 	public Object removeProperty(String key) {
-		// TODO Auto-generated method stub
+		
 		return this.property.remove(key);
 	}
 
 
 	@Override
 	public Collection<TimeEdge> getEdges(Direction direction, String... labels) throws IllegalArgumentException {
-		// TODO Auto-generated method stub
+		
 		ArrayList<TimeEdge> list=new ArrayList<>();
 		
 		
 		
 		if(labels.length!=0) {
+			
 			for(String edgeLabel:labels) {
+				
 				if(direction==Direction.IN) {
 					
-					for(TimeEdge edge:this.inEdges) {
-						if(edge.getLabel()==edgeLabel) list.add(edge);
-					}
+					for(TimeEdge edge:this.inEdges) 
+						if(edge.getLabel()==edgeLabel) 
+							list.add(edge);
+					
 					
 				}
 				else if(direction==Direction.OUT) {
-					for(TimeEdge edge:this.outEdges) {
-						if(edge.getLabel()==edgeLabel) list.add(edge);
-					}
+					for(TimeEdge edge:this.outEdges) 
+						if(edge.getLabel()==edgeLabel) 
+							list.add(edge);
+					
 				}
 				else { //both
 					ArrayList<TimeEdge> edges=new ArrayList<>();
 					edges.addAll(this.inEdges);
 					edges.addAll(this.outEdges);
 					
-					for(TimeEdge edge:edges) {
-						if(edge.getLabel()==edgeLabel) list.add(edge);
-					}
+					for(TimeEdge edge:edges) 
+						if(edge.getLabel()==edgeLabel) 
+							list.add(edge);
+					
 				}
 			}
 		}
 		else {
+			
 			if(direction==Direction.IN) {
 				
-				for(TimeEdge edge:this.inEdges) {
+				for(TimeEdge edge:this.inEdges) 
 					list.add(edge);
-				}
+				
 				
 			}
 			else if(direction==Direction.OUT) {
-				for(TimeEdge edge:this.outEdges) {
+				for(TimeEdge edge:this.outEdges) 
 					list.add(edge);
-				}
+				
 			}
 			else { //both
 				ArrayList<TimeEdge> edges=new ArrayList<>();
 				edges.addAll(this.inEdges);
 				edges.addAll(this.outEdges);
 				
-				for(TimeEdge edge:edges) {
+				for(TimeEdge edge:edges) 
 					list.add(edge);
-				}
+				
 			}
 			
 		}
@@ -256,8 +272,25 @@ public class MyTimeVertex implements TimeVertex{
 
 	@Override
 	public VertexEvent addEvent(long time) {
-		// TODO Auto-generated method stub
-		return null;
+		
+		if(this.graph.getVertexEvents().containsKey(this.id+"|"+String.valueOf(time))) {
+			
+			System.out.println("Already Exist Event");
+			return this.graph.getVertexEvents().get(this.id+"|"+String.valueOf(time));
+			
+			
+		}
+		else {
+			MyVertexEvent event=new MyVertexEvent(this.graph,this.id,time);
+			
+			this.graph.addVertexEvent(event);
+			
+			return event;
+		}
+		
+		
+
+		
 	}
 	
 	

@@ -1,7 +1,10 @@
 package org.dfpl.graph.blueprints.impl.m10366.custom;
 
+import java.util.Collection;
+
 import com.tinkerpop.blueprints.revised.Direction;
 import com.tinkerpop.blueprints.revised.Element;
+import com.tinkerpop.blueprints.revised.Vertex;
 
 
 public interface TimeEdge extends Element{
@@ -35,9 +38,9 @@ public interface TimeEdge extends Element{
 	
 	public EdgeEvent removeEvent(long time);
 	
-	public Iterable<EdgeEvent> pickEvents(long time);
+	public Collection<EdgeEvent> pickEvents(long time);
 	
-	public Iterable<EdgeEvent> getEdgeEvents(long time);
+	public Collection<EdgeEvent> getEdgeEvents(long time);
 	
 	
 	
