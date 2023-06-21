@@ -94,9 +94,9 @@ public class MyEdgeEvent implements EdgeEvent{
 	@Override
 	public VertexEvent getVertexEvent(Direction d) {
 		
-		if(d==Direction.IN) 
+		if(d==Direction.IN) //return ingoing vertex event
 			return this.graph.getVertexEvents().get(this.sourceID+"|"+String.valueOf(this.time));
-		else if(d==Direction.OUT)
+		else if(d==Direction.OUT) //return outgoing vertex event
 			return this.graph.getVertexEvents().get(this.targetID+"|"+String.valueOf(this.time));
 		else 
 			throw new IllegalArgumentException("not use both");

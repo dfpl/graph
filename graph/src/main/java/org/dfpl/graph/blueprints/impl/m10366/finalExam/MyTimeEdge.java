@@ -117,7 +117,7 @@ public class MyTimeEdge implements TimeEdge{
 			
 			
 			this.graph.addEdgeEvent(new MyEdgeEvent(this.graph,this.source.getId(),this.target.getId(),this.label,time));
-			this.graph.addEdgeEvent(new MyEdgeEvent(this.graph,this.target.getId(),this.source.getId(),this.label,time));
+			
 			
 		}
 		
@@ -130,6 +130,7 @@ public class MyTimeEdge implements TimeEdge{
 
 	@Override
 	public EdgeEvent pickEvent(long time) {
+		
 		
 		if(this.graph.getEdgeEvents().get(this.id+"|"+String.valueOf(time)).getProperties().isEmpty()) {
 			System.out.println("No Properties");

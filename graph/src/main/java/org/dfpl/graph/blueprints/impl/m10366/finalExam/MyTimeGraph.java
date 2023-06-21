@@ -3,7 +3,6 @@ package org.dfpl.graph.blueprints.impl.m10366.finalExam;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.Map;
 
 
 import org.dfpl.graph.blueprints.impl.m10366.custom.TimeEdge;
@@ -13,15 +12,16 @@ import org.dfpl.graph.blueprints.impl.m10366.custom.TimeVertex;
 
 import com.tinkerpop.blueprints.revised.Direction;
 
+
 public class MyTimeGraph implements TimeGraph{
 
 
 	
-	private Map<String,MyTimeVertex> vertecies;
-	private Map<String,MyTimeEdge> edges;
+	private HashMap<String, MyTimeVertex> vertecies;
+	private HashMap<String,MyTimeEdge> edges;
 	
-	private Map<String,MyVertexEvent> vertexEvents;
-	private Map<String,MyEdgeEvent> edgeEvents;
+	private HashMap<String,MyVertexEvent> vertexEvents;
+	private HashMap<String,MyEdgeEvent> edgeEvents;
 	
 	public MyTimeGraph() {
 		
@@ -33,6 +33,8 @@ public class MyTimeGraph implements TimeGraph{
 		this.edgeEvents=new HashMap<>();
 		
 	}
+	
+	
 	
 	public void addVertexEvent(MyVertexEvent event) {
 		
@@ -46,11 +48,11 @@ public class MyTimeGraph implements TimeGraph{
 		
 	}
 	
-	public Map<String,MyVertexEvent> getVertexEvents(){
+	public HashMap<String,MyVertexEvent> getVertexEvents(){
 		return this.vertexEvents;
 	}
 	
-	public Map<String,MyEdgeEvent> getEdgeEvents(){
+	public HashMap<String,MyEdgeEvent> getEdgeEvents(){
 		return this.edgeEvents;
 	}
 	
@@ -111,10 +113,7 @@ public class MyTimeGraph implements TimeGraph{
 		else return null;
 	}
 
-	@Override
-	public void removeVertex(TimeVertex vertex) {
-		
-	}
+	
 
 
 
@@ -134,7 +133,7 @@ public class MyTimeGraph implements TimeGraph{
 		
 		if(this.edges.containsKey(outVertex.getId()+"|"+label+"|"+inVertex.getId())) {
 			System.out.println("already exist edge");
-			return null;
+			return this.edges.get(outVertex.getId()+"|"+label+"|"+inVertex.getId());
 		}
 			
 		
@@ -192,6 +191,76 @@ public class MyTimeGraph implements TimeGraph{
 
 	@Override
 	public void removeEdge(TimeEdge edge) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public Collection<TimeVertex> getVertices() {
+		
+		ArrayList<TimeVertex> vertexList=new ArrayList<>();
+		
+		for(String vertexKey:this.vertecies.keySet()) {
+			
+			vertexList.add(this.vertecies.get(vertexKey));	
+
+		}
+		
+		return vertexList;
+		
+	}
+
+	@Override
+	public Collection<TimeVertex> getVertices(String key, Object value) {
+		ArrayList<TimeVertex> vertexList=new ArrayList<>();
+		
+		for(String vertexKey:this.vertecies.keySet()) {
+			
+			if(value==this.vertecies.get(vertexKey).getProperty(key)) {
+				
+				 vertexList.add(this.vertecies.get(vertexKey));	
+			}
+			
+		}
+		
+		return vertexList;
+	}
+
+	@Override
+	public Collection<TimeEdge> getEdges() {
+		ArrayList<TimeEdge> edgeList=new ArrayList<>();
+		
+		for(String edgeKey:this.edges.keySet()) {
+			edgeList.add(this.edges.get(edgeKey));
+		}
+		
+		return edgeList;
+	}
+
+	@Override
+	public Collection<TimeEdge> getEdges(String key, Object value) {
+		ArrayList<TimeEdge> edgeList=new ArrayList<>();
+		
+		for(String edgeKey:this.edges.keySet()) {
+			
+			if(value==this.edges.get(edgeKey).getProperty(key)) {
+
+				 edgeList.add(this.edges.get(edgeKey));
+
+			}
+			
+		}
+		
+		return edgeList;
+	}
+
+	@Override
+	public void removeVertex(TimeVertex vertex) {
+		
+	}
+	
+	@Override
+	public void shutdown() {
 		// TODO Auto-generated method stub
 		
 	}

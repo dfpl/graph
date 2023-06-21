@@ -1,6 +1,6 @@
 package org.dfpl.graph.blueprints.impl.m10366.custom;
 
-
+import java.util.Collection;
 
 
 
@@ -33,9 +33,26 @@ public interface TimeGraph {
 	 */
 	public void removeVertex(TimeVertex vertex);
 
+	/**
+	 * Return an iterable to all the vertices in the graph. If this is not possible
+	 * for the implementation, then an UnsupportedOperationException can be thrown.
+	 *
+	 * @return an iterable reference to all vertices in the graph
+	 */
+	public Collection<TimeVertex> getVertices();
 
-
-	
+	/**
+	 * Return an iterable to all the vertices in the graph that have a particular
+	 * key/value property. If this is not possible for the implementation, then an
+	 * UnsupportedOperationException can be thrown. The graph implementation should
+	 * use indexing structures to make this efficient else a full vertex-filter scan
+	 * is required.
+	 *
+	 * @param key   the key of vertex
+	 * @param value the value of the vertex
+	 * @return an iterable of vertices with provided key and value
+	 */
+	public Collection<TimeVertex> getVertices(String key, Object value);
 
 	/**
 	 * Create a new edge if e(outVertexID|label|inVertexID) does not exist in the
@@ -80,6 +97,33 @@ public interface TimeGraph {
 	 * @param edge the edge to remove from the graph
 	 */
 	public void removeEdge(TimeEdge edge);
+
+	/**
+	 * Return an iterable to all the edges in the graph. If this is not possible for
+	 * the implementation, then an UnsupportedOperationException can be thrown.
+	 *
+	 * @return an iterable reference to all edges in the graph
+	 */
+	public Collection<TimeEdge> getEdges();
+
+	/**
+	 * Return an iterable to all the edges in the graph that have a particular
+	 * key/value property. If this is not possible for the implementation, then an
+	 * UnsupportedOperationException can be thrown. The graph implementation should
+	 * use indexing structures to make this efficient else a full edge-filter scan
+	 * is required.
+	 *
+	 * @param key   the key of the edge
+	 * @param value the value of the edge
+	 * @return an iterable of edges with provided key and value
+	 */
+	public Collection<TimeEdge> getEdges(String key, Object value);
+
+	/**
+	 * A shutdown function is required to properly close the graph. This is
+	 * important for implementations that utilize disk-based serializations.
+	 */
+	public void shutdown();
 
 	
 

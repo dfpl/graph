@@ -1,5 +1,7 @@
 package org.dfpl.graph.blueprints.impl.m10366.finalExam;
 
+import java.util.HashMap;
+
 import org.dfpl.graph.blueprints.impl.m10366.custom.EdgeEvent;
 import org.dfpl.graph.blueprints.impl.m10366.custom.TemporalRelation;
 import org.dfpl.graph.blueprints.impl.m10366.custom.TimeEdge;
@@ -43,17 +45,29 @@ public class TestApp {
         EdgeEvent cdt13=cd.addEvent(13);
         EdgeEvent cet14=ce.addEvent(14);
         
-//        System.out.println(g.getEdgeEventsToList());
+
+        
         
         VertexEvent at3=a.addEvent(3);
         
-//        System.out.println(g.getVertexEventsToList());
+        TemporalReachabilityTimeCentricApproach ta=new TemporalReachabilityTimeCentricApproach(g,Long.valueOf(3));
         
-        System.out.println(at3.getVertexEvents(Direction.OUT,TemporalRelation.isAfter , "contact"));
+        ta.compute();
+    
+//        for(String key:ta.getGamma().keySet()) {
+//        	
+//        	for(String key2:ta.getGamma().get(key).keySet()) {
+//        		
+//        		
+//        		System.out.println(key+" gamma table "+key2+" vertex table timelist = "+ta.getGamma().get(key).get(key2));
+//        		
+//        	}
+//        	
+//        	
+//        }
         
         
-        VertexEvent c10=c.addEvent(10);
-        System.out.println(c10.getVertexEvents(Direction.OUT,TemporalRelation.isAfter , "contact"));
+        System.out.println(ta.getTemporalReachabilityToMap("a"));
         
 	}
 

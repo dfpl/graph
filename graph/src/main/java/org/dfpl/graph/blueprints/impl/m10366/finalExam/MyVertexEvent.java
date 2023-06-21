@@ -70,9 +70,14 @@ public class MyVertexEvent implements VertexEvent{
 	public Collection<VertexEvent> getVertexEvents(TemporalRelation r) {
 		
 		
-		//1. source vertex id가 같은 edge event들을 저장 
 		ArrayList<MyEdgeEvent> validEvents=new ArrayList<>();
 		
+		HashSet<String> idSet=new HashSet<>();
+		
+		ArrayList<VertexEvent> returnVertexEvents=new ArrayList<>();
+		
+		
+		//1. 유효한 event들을 validEvents에 저장
 		for(MyEdgeEvent event:this.graph.getEdgeEventsToList()) {	
 			if(event.getSourceID()==this.vertexID&&event.getTime()>this.time)
 				validEvents.add(event);
@@ -82,16 +87,18 @@ public class MyVertexEvent implements VertexEvent{
 		//2. 저장된 edge event들을 시간순으로 오름차순 정렬 
 		Collections.sort(validEvents,new MyEdgeEventComparator());
 		
-		//3. hash set을 사용하여 가장 빨리 도달가능한 vertex event 들을 저장 
-		HashSet<VertexEvent> validEventSet=new HashSet<>();
 		
-		for(MyEdgeEvent event:validEvents) {
-			if(!validEventSet.contains(event.getVertexEvent(Direction.OUT))) {
-				validEventSet.add(event.getVertexEvent(Direction.OUT));
+		//3. hash set을 사용하여 가장 빨리 도달가능한 edge event 들을 저장 
+		for(MyEdgeEvent validEvent:validEvents) {
+			
+			if(!idSet.contains(validEvent.getTargetID())) {
+				idSet.add(validEvent.getTargetID());
+				returnVertexEvents.add(validEvent.getVertexEvent(Direction.OUT));
 			}
 		}
-		//4. array list 로 변환하여 반환 
-		return new ArrayList<>(validEventSet);
+		
+		return returnVertexEvents;
+		
 	}
 
 	@Override
@@ -125,7 +132,7 @@ public class MyVertexEvent implements VertexEvent{
 		
 		HashSet<String> set=new HashSet<>();
 		
-		HashSet<EdgeEvent> returnSet=new HashSet<>();
+		ArrayList<EdgeEvent> returnEdgeEvents=new ArrayList<>();
 		
 		if(labels.length==0) {
 			
@@ -146,7 +153,7 @@ public class MyVertexEvent implements VertexEvent{
 				for(MyEdgeEvent event:validEvents) {
 					if(!set.contains(event.getTargetID())) {
 						set.add(event.getTargetID());
-						returnSet.add(event);
+						returnEdgeEvents.add(event);
 					}
 				}
 				
@@ -168,13 +175,52 @@ public class MyVertexEvent implements VertexEvent{
 				for(MyEdgeEvent event:validEvents) {
 					if(!set.contains(event.getSourceID())) {
 						set.add(event.getSourceID());
-						returnSet.add(event);
+						returnEdgeEvents.add(event);
 					}
 				}
 				
 				
 			}
 			else {
+				
+				
+				
+				//1. 유효한 event들을 validEvents에 저장
+				for(MyEdgeEvent event:this.graph.getEdgeEventsToList()) {	
+					if((event.getSourceID()==this.vertexID||event.getTargetID()==this.vertexID)&&event.getTime()>this.time)
+						validEvents.add(event);
+				}
+				
+				
+				//2. 저장된 edge event들을 시간순으로 오름차순 정렬 
+				Collections.sort(validEvents,new MyEdgeEventComparator());
+				
+				
+				//3. hash set을 사용하여 가장 빨리 도달가능한 edge event 들을 저장 
+				
+				HashSet<String> sourceIdSet=new HashSet<>();
+				HashSet<String> targetIdSet=new HashSet<>();
+				
+				for(MyEdgeEvent validEvent:validEvents) {
+					
+					if(validEvent.getSourceID()==this.vertexID) {
+						if(!targetIdSet.contains(validEvent.getTargetID())) {
+							targetIdSet.add(validEvent.getTargetID());
+							returnEdgeEvents.add(validEvent);
+						}
+					}
+					else {
+						if(!sourceIdSet.contains(validEvent.getSourceID())) {
+							sourceIdSet.add(validEvent.getSourceID());
+							returnEdgeEvents.add(validEvent);
+						}
+					}
+					
+					
+					
+				}
+				
+				
 				
 				
 			}
@@ -208,7 +254,7 @@ public class MyVertexEvent implements VertexEvent{
 				for(MyEdgeEvent event:validEvents) {
 					if(!set.contains(event.getTargetID())) {
 						set.add(event.getTargetID());
-						returnSet.add(event);
+						returnEdgeEvents.add(event);
 					}
 				}
 				
@@ -235,7 +281,7 @@ public class MyVertexEvent implements VertexEvent{
 				for(MyEdgeEvent event:validEvents) {
 					if(!set.contains(event.getSourceID())) {
 						set.add(event.getSourceID());
-						returnSet.add(event);
+						returnEdgeEvents.add(event);
 					}
 				}
 				
@@ -243,7 +289,41 @@ public class MyVertexEvent implements VertexEvent{
 			}
 			else {
 				
+				//1. 유효한 event들을 validEvents에 저장
+				for(MyEdgeEvent event:this.graph.getEdgeEventsToList()) {
+					for(String label:labels) 
+						if((event.getSourceID()==this.vertexID||event.getTargetID()==this.vertexID)&&event.getTime()>this.time&&event.getLabel()==label)
+							validEvents.add(event);
+				}
 				
+				
+				//2. 저장된 edge event들을 시간순으로 오름차순 정렬 
+				Collections.sort(validEvents,new MyEdgeEventComparator());
+				
+				
+				//3. hash set을 사용하여 가장 빨리 도달가능한 edge event 들을 저장 
+				
+				HashSet<String> sourceIdSet=new HashSet<>();
+				HashSet<String> targetIdSet=new HashSet<>();
+				
+				for(MyEdgeEvent validEvent:validEvents) {
+					
+					if(validEvent.getSourceID()==this.vertexID) {
+						if(!targetIdSet.contains(validEvent.getTargetID())) {
+							targetIdSet.add(validEvent.getTargetID());
+							returnEdgeEvents.add(validEvent);
+						}
+					}
+					else {
+						if(!sourceIdSet.contains(validEvent.getSourceID())) {
+							sourceIdSet.add(validEvent.getSourceID());
+							returnEdgeEvents.add(validEvent);
+						}
+					}
+					
+					
+					
+				}
 			}
 			
 			
@@ -254,7 +334,7 @@ public class MyVertexEvent implements VertexEvent{
 		}
 		
 		
-		return new ArrayList<>(returnSet);
+		return returnEdgeEvents;
 		
 	}
 
@@ -264,9 +344,9 @@ public class MyVertexEvent implements VertexEvent{
 		
 		ArrayList<MyEdgeEvent> validEvents=new ArrayList<>();
 		
-		HashSet<VertexEvent> set=new HashSet<>();
+		HashSet<String> idSet=new HashSet<>();
 		
-		
+		ArrayList<VertexEvent> returnVertexEvents=new ArrayList<>();
 		
 		if(labels.length==0) {
 			
@@ -284,10 +364,11 @@ public class MyVertexEvent implements VertexEvent{
 				
 				
 				//3. hash set을 사용하여 가장 빨리 도달가능한 edge event 들을 저장 
-				for(MyEdgeEvent event:validEvents) {
-					if(!set.contains(event.getVertexEvent(Direction.OUT))) {
-						set.add( event.getVertexEvent(Direction.OUT));
-						
+				for(MyEdgeEvent validEvent:validEvents) {
+					
+					if(!idSet.contains(validEvent.getTargetID())) {
+						idSet.add(validEvent.getTargetID());
+						returnVertexEvents.add(validEvent.getVertexEvent(Direction.OUT));
 					}
 				}
 				
@@ -306,10 +387,11 @@ public class MyVertexEvent implements VertexEvent{
 				
 				
 				//3. hash set을 사용하여 가장 빨리 도달가능한 edge event 들을 저장 
-				for(MyEdgeEvent event:validEvents) {
-					if(!set.contains(event.getVertexEvent(Direction.IN))) {
-						set.add(event.getVertexEvent(Direction.IN));
-						
+				for(MyEdgeEvent validEvent:validEvents) {
+					
+					if(!idSet.contains(validEvent.getSourceID())) {
+						idSet.add(validEvent.getSourceID());
+						returnVertexEvents.add(validEvent.getVertexEvent(Direction.IN));
 					}
 				}
 				
@@ -317,7 +399,40 @@ public class MyVertexEvent implements VertexEvent{
 			}
 			else {
 				
-				throw new IllegalArgumentException("not use both");
+				//1. 유효한 event들을 validEvents에 저장
+				for(MyEdgeEvent event:this.graph.getEdgeEventsToList()) {	
+					if((event.getSourceID()==this.vertexID||event.getTargetID()==this.vertexID)&&event.getTime()>this.time)
+						validEvents.add(event);
+				}
+				
+				//2. 저장된 edge event들을 시간순으로 오름차순 정렬 
+				Collections.sort(validEvents,new MyEdgeEventComparator());
+				
+				
+				//3. hash set을 사용하여 가장 빨리 도달가능한 edge event 들을 저장 
+				
+				HashSet<String> sourceIdSet=new HashSet<>();
+				HashSet<String> targetIdSet=new HashSet<>();
+				
+				for(MyEdgeEvent validEvent:validEvents) {
+					
+					if(validEvent.getSourceID()==this.vertexID) {
+						if(!targetIdSet.contains(validEvent.getTargetID())) {
+							targetIdSet.add(validEvent.getTargetID());
+							returnVertexEvents.add(validEvent.getVertexEvent(Direction.OUT));
+						}
+					}
+					else {
+						if(!sourceIdSet.contains(validEvent.getSourceID())) {
+							sourceIdSet.add(validEvent.getSourceID());
+							returnVertexEvents.add(validEvent.getVertexEvent(Direction.IN));
+						}
+					}
+					
+					
+					
+				}
+				
 			}
 			
 			
@@ -328,11 +443,10 @@ public class MyVertexEvent implements VertexEvent{
 				
 				//1. 유효한 event들을 validEvents에 저장
 				for(MyEdgeEvent event:this.graph.getEdgeEventsToList()) {
-					for(String label:labels) 
-						if(event.getSourceID()==this.vertexID&&event.getLabel()==label&&event.getTime()>this.time)
+					for(String label:labels)
+						if(event.getSourceID()==this.vertexID&&event.getTime()>this.time&&event.getLabel()==label)
 							validEvents.add(event);
 				}
-				
 				
 				
 				//2. 저장된 edge event들을 시간순으로 오름차순 정렬 
@@ -340,10 +454,11 @@ public class MyVertexEvent implements VertexEvent{
 				
 				
 				//3. hash set을 사용하여 가장 빨리 도달가능한 edge event 들을 저장 
-				for(MyEdgeEvent event:validEvents) {
-					if(!set.contains(event.getVertexEvent(Direction.OUT))) {
-						set.add( event.getVertexEvent(Direction.OUT));
-						
+				for(MyEdgeEvent validEvent:validEvents) {
+					
+					if(!idSet.contains(validEvent.getTargetID())) {
+						idSet.add(validEvent.getTargetID());
+						returnVertexEvents.add(validEvent.getVertexEvent(Direction.OUT));
 					}
 				}
 				
@@ -352,9 +467,9 @@ public class MyVertexEvent implements VertexEvent{
 			}
 			else if(d==Direction.IN) {
 				//1. 유효한 event들을 validEvents에 저장
-				for(MyEdgeEvent event:this.graph.getEdgeEventsToList()) {	
-					for(String label:labels) 
-						if(event.getTargetID()==this.vertexID&&event.getLabel()==label&&event.getTime()>this.time)
+				for(MyEdgeEvent event:this.graph.getEdgeEventsToList()) {
+					for(String label:labels)
+						if(event.getTargetID()==this.vertexID&&event.getTime()>this.time&&event.getLabel()==label)
 							validEvents.add(event);
 				}
 				
@@ -363,10 +478,11 @@ public class MyVertexEvent implements VertexEvent{
 				
 				
 				//3. hash set을 사용하여 가장 빨리 도달가능한 edge event 들을 저장 
-				for(MyEdgeEvent event:validEvents) {
-					if(!set.contains(event.getVertexEvent(Direction.IN))) {
-						set.add(event.getVertexEvent(Direction.IN));
-						
+				for(MyEdgeEvent validEvent:validEvents) {
+					
+					if(!idSet.contains(validEvent.getSourceID())) {
+						idSet.add(validEvent.getSourceID());
+						returnVertexEvents.add(validEvent.getVertexEvent(Direction.IN));
 					}
 				}
 				
@@ -374,13 +490,47 @@ public class MyVertexEvent implements VertexEvent{
 			}
 			else {
 				
-				throw new IllegalArgumentException("not use both");
+				//1. 유효한 event들을 validEvents에 저장
+				for(MyEdgeEvent event:this.graph.getEdgeEventsToList()) {
+					for(String label:labels)
+						if((event.getSourceID()==this.vertexID||event.getTargetID()==this.vertexID)&&event.getTime()>this.time&&event.getLabel()==label)
+							validEvents.add(event);
+				}
+				
+				//2. 저장된 edge event들을 시간순으로 오름차순 정렬 
+				Collections.sort(validEvents,new MyEdgeEventComparator());
+				
+				
+				//3. hash set을 사용하여 가장 빨리 도달가능한 edge event 들을 저장 
+				
+				HashSet<String> sourceIdSet=new HashSet<>();
+				HashSet<String> targetIdSet=new HashSet<>();
+				
+				for(MyEdgeEvent validEvent:validEvents) {
+					
+					if(validEvent.getSourceID()==this.vertexID) {
+						if(!targetIdSet.contains(validEvent.getTargetID())) {
+							targetIdSet.add(validEvent.getTargetID());
+							returnVertexEvents.add(validEvent.getVertexEvent(Direction.OUT));
+						}
+					}
+					else {
+						if(!sourceIdSet.contains(validEvent.getSourceID())) {
+							sourceIdSet.add(validEvent.getSourceID());
+							returnVertexEvents.add(validEvent.getVertexEvent(Direction.IN));
+						}
+					}
+					
+					
+					
+				}
+				
 			}
 			
 			
 		}
 		
-		return new ArrayList<>(set);
+		return returnVertexEvents;
 	}
 
 }
