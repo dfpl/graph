@@ -1,7 +1,9 @@
 package org.dfpl.graph.blueprints.impl.m10366.finalExam;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 
 import org.dfpl.graph.blueprints.impl.m10366.custom.TimeEdge;
@@ -16,6 +18,7 @@ public class TestCollegeMsgTimeCentric {
 		long beforeTime=System.currentTimeMillis();
 		
 		BufferedReader br = new BufferedReader(new FileReader("D://mydata/CollegeMsg-1000.txt"));
+		BufferedWriter bw = new BufferedWriter(new FileWriter("D://mydata/reachability_timecentric_approach.txt"));
 		
 		MyTimeGraph graph=new MyTimeGraph();
 		
@@ -54,14 +57,30 @@ public class TestCollegeMsgTimeCentric {
         
 		ta.compute();
 		
-		String vertexID="1";
-        
-		System.out.println("vertex "+vertexID+" temporal reachability size : "+ta.getTemporalReachabilitySize(vertexID)+" in CollegeMsg-1000.txt");
-        
-		long afterTime = System.currentTimeMillis();
 		
-		long secDiffTime = (afterTime - beforeTime);
-		System.out.println("time(Millis) : "+secDiffTime);
+		
+		
+		for(TimeVertex vertex:graph.getVertices()) {
+			
+			bw.write(vertex.getId()+"	"+String.valueOf(ta.getTemporalReachabilitySize(vertex.getId()))+"	"+String.valueOf( (System.currentTimeMillis() - beforeTime)));
+			bw.newLine();
+			
+			
+			//System.out.println("vertex "+vertex.getId()+" temporal reachability size : "+ta.getTemporalReachabilitySize(vertex.getId())+" in CollegeMsg-1000.txt");
+		}
+		
+		
+		bw.close();
+		
+        
+		
+        
+		
+		
+		
+		
+		
+		
         
 		
 	}
