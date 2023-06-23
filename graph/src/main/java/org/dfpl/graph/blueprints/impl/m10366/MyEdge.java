@@ -23,7 +23,7 @@ public class MyEdge implements Edge{
 		this.source=source;
 		this.target=target;
 		this.label=label;
-		this.id=source.getId()+"|"+label+target.getId();
+		this.id=source.getId()+"|"+label+"|"+target.getId();
 		this.property=new HashMap<>();
 	}
 	
