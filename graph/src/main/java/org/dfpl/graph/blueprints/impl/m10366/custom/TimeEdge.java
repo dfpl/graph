@@ -4,10 +4,8 @@ import java.util.Collection;
 
 import com.tinkerpop.blueprints.revised.Direction;
 import com.tinkerpop.blueprints.revised.Element;
-import com.tinkerpop.blueprints.revised.Vertex;
 
-
-public interface TimeEdge extends Element{
+public interface TimeEdge extends Element {
 	/**
 	 * Return the tail/out or head/in vertex.
 	 *
@@ -28,20 +26,17 @@ public interface TimeEdge extends Element{
 	 * Remove the element from the graph.
 	 */
 	public void remove();
-	
-	//time
-	
-	
+
+	// time
+
 	public EdgeEvent addEvent(long time);
-	
+
 	public EdgeEvent pickEvent(long time);
-	
+
 	public EdgeEvent removeEvent(long time);
-	
+
 	public Collection<EdgeEvent> pickEvents(long time);
-	
+
 	public Collection<EdgeEvent> getEdgeEvents(long time);
-	
-	
-	
+
 }
