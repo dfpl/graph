@@ -142,12 +142,13 @@ public class MyTimeGraph implements TimeGraph{
 		MyTimeEdge edge_1=new MyTimeEdge(this,outVertex,inVertex,label);
 		MyTimeEdge edge_2=new MyTimeEdge(this,inVertex,outVertex,label);
 		
-		this.edges.put(inVertex.getId()+"|"+label+"|"+outVertex.getId(), edge_1);
-		this.edges.put(outVertex.getId()+"|"+label+"|"+inVertex.getId(), edge_2);
+		
+		this.edges.put(outVertex.getId()+"|"+label+"|"+inVertex.getId(), edge_1);
+		this.edges.put(inVertex.getId()+"|"+label+"|"+outVertex.getId(), edge_2);
 		
 		//각 vertex update
 		MyTimeVertex edge_1_outV=(MyTimeVertex)edge_1.getVertex(Direction.OUT);
-		MyTimeVertex edge_1_inV=(MyTimeVertex)edge_1.getVertex(Direction.OUT);
+		MyTimeVertex edge_1_inV=(MyTimeVertex)edge_1.getVertex(Direction.IN);
 		
 		edge_1_outV.addOutEdges(edge_1);
 		edge_1_outV.addInEdges(edge_2);

@@ -1,5 +1,9 @@
 package org.dfpl.graph.blueprints.impl.m10366.finalExam;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.TreeMap;
+
 import org.dfpl.graph.blueprints.impl.m10366.custom.EdgeEvent;
 import org.dfpl.graph.blueprints.impl.m10366.custom.TimeEdge;
 import org.dfpl.graph.blueprints.impl.m10366.custom.TimeVertex;
@@ -33,31 +37,39 @@ public class TestApp {
 		EdgeEvent abt10 = ab.addEvent(10);
 
 		EdgeEvent bct8 = bc.addEvent(8);
-		EdgeEvent bdt12 = bd.addEvent(12);
-		EdgeEvent bct16 = bc.addEvent(16);
+		EdgeEvent bdt16 = bd.addEvent(16);
 
-		EdgeEvent cdt13 = cd.addEvent(13);
 		EdgeEvent cet14 = ce.addEvent(14);
+		
+		TimeEdge da=g.getEdge(d,a,"contact");
+		EdgeEvent dat12=da.addEvent(12);
+		
+		TimeEdge dc=g.getEdge(d,c,"contact");
+		EdgeEvent dct13=dc.addEvent(13);
 
 		VertexEvent at3 = a.addEvent(3);
 
+		
+		
+		
 		TemporalReachabilityTimeCentricApproach ta = new TemporalReachabilityTimeCentricApproach(g, Long.valueOf(3));
 
 		ta.compute();
 
-//        for(String key:ta.getGamma().keySet()) {
-//        	
-//        	for(String key2:ta.getGamma().get(key).keySet()) {
-//        		
-//        		
-//        		System.out.println(key+" gamma table "+key2+" vertex table timelist = "+ta.getGamma().get(key).get(key2));
-//        		
-//        	}
-//        	
-//        	
-//        }
+		
+		TreeMap<Long, ArrayList<MyEdgeEvent>> map=ta.getSortedEdgeEvent();
+		
+		HashMap<String, HashMap<String, Long>> gamma=ta.getGamma();
+		
+		
+		for(String key:gamma.get("a").keySet()) {
+			System.out.println("tr vertex = "+key+" and time = "+gamma.get("a").get(key));
+			
+		}
+		
+		
 
-		System.out.println(ta.getTemporalReachabilityToMap("a"));
+		System.out.println(ta.getTemporalReachabilitySize("a"));
 
 	}
 

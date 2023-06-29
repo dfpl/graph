@@ -53,8 +53,7 @@ public class TestCollegeMsgTimeCentric {
 					+ String.valueOf((System.currentTimeMillis() - beforeTime)));
 			bw.newLine();
 
-			// System.out.println("vertex "+vertex.getId()+" temporal reachability size :
-			// "+ta.getTemporalReachabilitySize(vertex.getId())+" in CollegeMsg-1000.txt");
+//			System.out.println("vertex "+vertex.getId()+" temporal reachability size : "+ta.getTemporalReachabilitySize(vertex.getId())+" in CollegeMsg-1000.txt");
 		}
 
 		bw.close();
