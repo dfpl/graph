@@ -57,19 +57,11 @@ public class TestApp {
 		ta.compute();
 
 		
-		TreeMap<Long, ArrayList<MyEdgeEvent>> map=ta.getSortedEdgeEvent();
 		
-		HashMap<String, HashMap<String, Long>> gamma=ta.getGamma();
-		
-		
-		for(String key:gamma.get("a").keySet()) {
-			System.out.println("tr vertex = "+key+" and time = "+gamma.get("a").get(key));
-			
-		}
 		
 		
 
-		System.out.println(ta.getTemporalReachabilitySize("a"));
+		System.out.println(ta.getTemporalPath("a", "d"));
 
 	}
 

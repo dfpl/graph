@@ -111,5 +111,51 @@ public class TemporalReachabilityTimeCentricApproach {
 	}
 
 	
+	public ArrayList<String> getTemporalPath(String sourceID,String targetID) {
+		
+		
+		HashMap<String,ArrayList<String>> pathMap=new HashMap<>();
+		
+		HashMap<String,Long> sourceGamma=new HashMap<>();
+		
+		
+		
+		
+		//initialize 
+		for(TimeVertex vertex : this.graph.getVertices()) {
+			ArrayList<String> path=new ArrayList<>();
+			path.add(vertex.getId());
+			pathMap.put(vertex.getId(),path);
+		}
+		sourceGamma.put(sourceID, this.startTime);
+		
+		
+		//update gamma table 
+		for(Long time:this.sortedEdgeEvent.keySet()) {
+			
+			for(MyEdgeEvent edgeEvent:this.sortedEdgeEvent.get(time)) {
+				
+				if(sourceGamma.containsKey(edgeEvent.getSourceID()) && !sourceGamma.containsKey(edgeEvent.getTargetID())) {
+					
+					sourceGamma.put(edgeEvent.getTargetID(), time);
+					
+					pathMap.get(edgeEvent.getTargetID()).addAll(0,pathMap.get(edgeEvent.getSourceID()));
+					
+					
+				}
+					
+			}
+			
+		}
+		
+		
+		
+
+		
+		
+		return pathMap.get(targetID);
+		
+	}
+	
 
 }
