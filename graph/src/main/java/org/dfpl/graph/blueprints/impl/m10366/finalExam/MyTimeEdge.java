@@ -108,23 +108,13 @@ public class MyTimeEdge implements TimeEdge{
 		}
 		else {
 			
-			//양쪽 vertex event 없으면 생성
-			if(!this.graph.getVertexEvents().containsKey(this.source.getId()+"|"+String.valueOf(time))) 
-				this.graph.getVertexEvents().put(this.source.getId()+"|"+String.valueOf(time), new MyVertexEvent(this.graph,this.source.getId(),time));
-
-			if(!this.graph.getVertexEvents().containsKey(this.target.getId()+"|"+String.valueOf(time))) 
-				this.graph.getVertexEvents().put(this.target.getId()+"|"+String.valueOf(time), new MyVertexEvent(this.graph,this.target.getId(),time));
+			MyEdgeEvent edgeEvent=new MyEdgeEvent(this.graph,this.source.getId(),this.target.getId(),this.label,time);
 			
-			
-			this.graph.addEdgeEvent(new MyEdgeEvent(this.graph,this.source.getId(),this.target.getId(),this.label,time));
-			
-			
+			this.graph.addEdgeEvent(edgeEvent);
+			return edgeEvent;
 		}
 		
-		
-		
-		
-		return null;
+
 		
 	}
 

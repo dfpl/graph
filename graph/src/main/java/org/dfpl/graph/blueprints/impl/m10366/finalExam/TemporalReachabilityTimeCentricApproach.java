@@ -1,9 +1,10 @@
 package org.dfpl.graph.blueprints.impl.m10366.finalExam;
 
 import java.util.ArrayList;
-import java.util.Collections;
+
 import java.util.HashMap;
-import java.util.HashSet;
+
+import java.util.TreeMap;
 
 import org.dfpl.graph.blueprints.impl.m10366.custom.TimeVertex;
 
@@ -15,15 +16,15 @@ public class TemporalReachabilityTimeCentricApproach {
 
 	private HashMap<String, HashMap<String, Long>> gamma;
 
-	private ArrayList<Long> timeList;
-	// private TreeMap<Long, List<EdgeEvent>>
+	
+	private TreeMap<Long, ArrayList<MyEdgeEvent>> sortedEdgeEvent;
 
 	public TemporalReachabilityTimeCentricApproach(MyTimeGraph graph, Long startTime) {
 
 		this.graph = graph;
 		this.startTime = startTime;
 		this.gamma = new HashMap<>();
-
+		this.sortedEdgeEvent=new TreeMap<>();
 		this.initializeGamma();
 
 	}
@@ -32,33 +33,38 @@ public class TemporalReachabilityTimeCentricApproach {
 		return this.gamma;
 	}
 
-	public ArrayList<Long> getTimeList() {
-		return this.timeList;
+	
+	public TreeMap<Long, ArrayList<MyEdgeEvent>> getSortedEdgeEvent(){
+		return this.sortedEdgeEvent;
 	}
+	
 
 	public void initializeGamma() {
 
-		HashSet<Long> timeSet = new HashSet<>();
 
 		ArrayList<MyEdgeEvent> edgeEvents = (ArrayList<MyEdgeEvent>) this.graph.getEdgeEventsToList();
+		
+		
 
-		// 1. hash set 으로 중복 없이 time 저장 후 time list에 정렬 저장
+		// 1. tree map으로 time에 따라 정렬하여 edge event들 저장 
+		for(MyEdgeEvent edgeEvent:edgeEvents) {
+			
+			if(this.sortedEdgeEvent.containsKey(edgeEvent.getTime())) {
+				this.sortedEdgeEvent.get(edgeEvent.getTime()).add(edgeEvent);
+				continue;
+			}
+				
+			ArrayList<MyEdgeEvent> value=new ArrayList<>();
+			
+			value.add(edgeEvent);
+			
+			this.sortedEdgeEvent.put(edgeEvent.getTime(), value);
+		}
+		
+		
 
-		timeSet.add(this.startTime);
 
-		for (MyEdgeEvent edgeEvent : edgeEvents)
-			if (edgeEvent.getTime() > this.startTime)
-				timeSet.add(edgeEvent.getTime());
-
-		this.timeList = new ArrayList<>(timeSet);
-
-		// 오름차순 정렬
-		Collections.sort(this.timeList);
-
-		// 2. max value로 초기화한 후 각 vertex에 대한 gamma table 초기화
-
-		// long max value로 초기화
-
+		// 2. 각 vertex에 대한 gamma table 초기화
 		for (TimeVertex vertex : this.graph.getVertices()) {
 
 			HashMap<String, Long> gammaVertex = new HashMap<String, Long>();
@@ -70,72 +76,86 @@ public class TemporalReachabilityTimeCentricApproach {
 
 	}
 
-	@SuppressWarnings("unused")
+	
+	
+
 	public void compute() {
 
-		ArrayList<MyEdgeEvent> edgeEvents = (ArrayList<MyEdgeEvent>) this.graph.getEdgeEventsToList();
-
-		// time list (순서화된) 
+	 
+		//time으로 정렬된 edge event들을 순회하면서 gamma table update
+		for(String vertexID:this.gamma.keySet()) {
+			
+			for(Long time:this.sortedEdgeEvent.keySet()) {
+				
+				for(MyEdgeEvent edgeEvent:this.sortedEdgeEvent.get(time)) {
+					
+					if(this.gamma.get(vertexID).containsKey(edgeEvent.getSourceID()) && !this.gamma.get(vertexID).containsKey(edgeEvent.getTargetID())) {
+						
+						this.gamma.get(vertexID).put(edgeEvent.getTargetID(), time);
+					}
+						
+				}
+				
+			}
+			
+		}
 		
-		// 임시 주석처리 
-//		for (String vertexID : this.gamma.keySet()) {
-//
-//			for (Long t : this.timeList) {
-//
-//				for (MyEdgeEvent edgeEvent : edgeEvents) {
-//
-//					if (edgeEvent.getTime() == t
-//							&& this.gamma.get(vertexID).get(edgeEvent.getSourceID()).get(t) != Long.MAX_VALUE
-//							&& this.gamma.get(vertexID).get(edgeEvent.getTargetID()).get(t) == Long.MAX_VALUE) {
-//						// 시간이 같고
-//						// sourceID의 time key의 value 값이 설정되어있고
-//						// targetID의 time key의 value 값이 설정되어 있지 않으면
-//
-//						for (Long time : this.gamma.get(vertexID).get(edgeEvent.getTargetID()).keySet()) {
-//
-//							if (time >= edgeEvent.getTime())
-//								this.gamma.get(vertexID).get(edgeEvent.getTargetID()).put(time, edgeEvent.getTime());
-//						}
-//					}
-//				}
-//			}
-//		}
+		
 
 	}
 
-	@SuppressWarnings("unused")
+
 	public int getTemporalReachabilitySize(String vertexID) {
 
-		Long lastTime = this.timeList.get(this.timeList.size() - 1);
-
-		int size = 0;
-
-		// 임시 주석처리 
-//		for (String vID : this.gamma.get(vertexID).keySet()) {
-//
-//			if (this.gamma.get(vertexID).get(vID).get(lastTime) != Long.MAX_VALUE)
-//				size += 1;
-//
-//		}
-
-		return size;
+		return this.gamma.get(vertexID).keySet().size();
 	}
 
-	public HashMap<String, Long> getTemporalReachabilityToMap(String vertexID) {
+	
+	public ArrayList<String> getTemporalPath(String sourceID,String targetID) {
+		
+		
+		HashMap<String,ArrayList<String>> pathMap=new HashMap<>();
+		
+		HashMap<String,Long> sourceGamma=new HashMap<>();
+		
+		
+		
+		
+		//initialize 
+		for(TimeVertex vertex : this.graph.getVertices()) {
+			ArrayList<String> path=new ArrayList<>();
+			path.add(vertex.getId());
+			pathMap.put(vertex.getId(),path);
+		}
+		sourceGamma.put(sourceID, this.startTime);
+		
+		
+		//update gamma table 
+		for(Long time:this.sortedEdgeEvent.keySet()) {
+			
+			for(MyEdgeEvent edgeEvent:this.sortedEdgeEvent.get(time)) {
+				
+				if(sourceGamma.containsKey(edgeEvent.getSourceID()) && !sourceGamma.containsKey(edgeEvent.getTargetID())) {
+					
+					sourceGamma.put(edgeEvent.getTargetID(), time);
+					
+					pathMap.get(edgeEvent.getTargetID()).addAll(0,pathMap.get(edgeEvent.getSourceID()));
+					
+					
+				}
+					
+			}
+			
+		}
+		
+		
+		
 
-		HashMap<String, Long> tr = new HashMap<>();
-
-		// 임시 주석 처리
-//		Long lastTime = this.timeList.get(this.timeList.size() - 1);
-//
-//		for (String vID : this.gamma.get(vertexID).keySet()) {
-//
-//			if (this.gamma.get(vertexID).get(vID).get(lastTime) != Long.MAX_VALUE)
-//				tr.put(vID, this.gamma.get(vertexID).get(vID).get(lastTime));
-//
-//		}
-
-		return tr;
+		
+		
+		return pathMap.get(targetID);
+		
 	}
+	
 
 }
